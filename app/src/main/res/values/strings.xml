@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Invisible Widgets Pro</string>
+    <!--<string name="config_mode_switch_title">Configuration Mode</string>-->
+    <string name="config_mode_desc_on">Configuration Mode is now ACTIVE</string>
+    <string name="config_mode_desc_off">Configuration Mode is now INACTIVE</string>
+    <string name="config_title_off">Configuration Mode : OFF</string>
+    <string name="config_title_on">Configuration Mode : ON</string>
+    <string name="widgets_id_to_package_file_key">"com.shivam.invisiblewidgetspro.WIDGETS_FILE_KEY"</string>
+</resources>
