@@ -3,14 +3,14 @@ package com.shivam.invisiblewidgetspro.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.shivam.invisiblewidgetspro.R;
+import com.shivam.invisiblewidgetspro.ui.ConfigurationActivity;
 
 /**
  * Created by shivam on 10/02/17.
@@ -18,54 +18,69 @@ import com.shivam.invisiblewidgetspro.R;
 
 public class WidgetProvider extends AppWidgetProvider {
 
-    private boolean is_config_mode = false;
+    private boolean isConfigMode = false;
 
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        final int N = appWidgetIds.length;
 
-        // Perform this loop procedure for each App Widget that belongs to this provider
-        for (int i=0; i<N; i++) {
-            int appWidgetId = appWidgetIds[i];
+        Intent intent;
+        PendingIntent pendingIntent;
+        RemoteViews views;
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getString(R.string.widgets_id_to_package_file_key),
+                Context.MODE_PRIVATE);
+        String packageName;
 
-            SharedPreferences sharedPref = context.getSharedPreferences(
-                    context.getString(R.string.widgets_id_to_package_file_key),
-                    Context.MODE_PRIVATE);
-          ///  int defaultValue = context.getResources().getInteger(R.string
-             //       .saved_high_score_default);
-         //   long highScore = sharedPref.getInt(getString(R.string.saved_high_score), 0);
+        if(isConfigMode) {
+            //todo show app widget id
+            for (int appWidgetId : appWidgetIds) {
+                packageName = sharedPref.getString(appWidgetId + "", context.getPackageName());
 
-            Log.d("xxx", appWidgetId+ " from widget provider");
-            Log.d("xxx",sharedPref.toString());
-            String packageName = sharedPref.getString(appWidgetId+"", null);
-            Log.d("xxx", packageName+ "  pkg name from widget provider");
-            // Create an Intent to launch ExampleActivity
-            if(packageName != null) {
-                Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+                intent = new Intent(context, ConfigurationActivity.class);
+                intent.putExtra("packageName", packageName);
+                intent.putExtra("widgetId", appWidgetId);
+//                intent.putExtra("is_config_mode", isConfigMode);
+                pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-                // Get the layout for the App Widget and attach an on-click listener
-                // to the button
-                RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_visible);
+                views = new RemoteViews(context.getPackageName(), R.layout.widget_visible);
                 views.setOnClickPendingIntent(R.id.visible_widget_layout, pendingIntent);
 
-                // Tell the AppWidgetManager to perform an update on the current app widget
                 appWidgetManager.updateAppWidget(appWidgetId, views);
             }
-            else
-                Log.d("xxx", "else blovl");
+        } else {
+            for (int appWidgetId : appWidgetIds) {
+                packageName = sharedPref.getString(appWidgetId + "", context.getPackageName());
+
+                intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+                pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+                if(packageName.equals(context.getPackageCodePath())) {
+                    intent.putExtra("packageName", packageName);
+                    intent.putExtra("widgetId", appWidgetId);
+//                    intent.putExtra("is_config_mode", isConfigMode);
+                }
+
+                views = new RemoteViews(context.getPackageName(), R.layout.widget_invisible);
+                views.setOnClickPendingIntent(R.id.invisible_widget_layout, pendingIntent);
+
+                appWidgetManager.updateAppWidget(appWidgetId, views);
+            }
         }
     }
 
-//    @Override
-//    public void onReceive(Context context, Intent intent) {
-//        super.onReceive(context, intent);
-//    }
-
     @Override
-    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
-        onUpdate(context, appWidgetManager, new int[]{appWidgetId});
+    public void onReceive(Context context, Intent intent) {
+       if(intent.getAction().equals("com.shivam.invisiblewidgetspro.MANUAL_APPWIDGET_UPDATE")) {
+           AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+           int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context,
+                   getClass()));
+
+           isConfigMode = intent.getBooleanExtra("is_config_mode", false);
+
+           onUpdate(context, appWidgetManager, appWidgetIds);
+
+       }
     }
 
     @Override

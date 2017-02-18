@@ -5,76 +5,94 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 import com.shivam.invisiblewidgetspro.R;
 
-import java.util.List;
-
-public class ConfigurationActivity extends AppCompatActivity {
+public class ConfigurationActivity extends AppCompatActivity implements AppSelectorDialogFragment.AppSelectedListener {
 
     private int mAppWidgetId;
+    private String launchPackageName;
+    private TextView packageNameTextView;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
+    private boolean isConfigModeOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
 
-        final PackageManager pm = getPackageManager();
-//get a list of installed apps.
-        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+        packageNameTextView = (TextView) findViewById(R.id.selected_package);
 
-//        for (ApplicationInfo packageInfo : packages) {
-//            Log.d(TAG, "Installed package :" + packageInfo.packageName);
-//            Log.d(TAG, "Source dir : " + packageInfo.sourceDir);
-//            Log.d(TAG, "Launch Activity :" + pm.getLaunchIntentForPackage(packageInfo.packageName));
-//        }
+//        final PackageManager pm = getPackageManager();
+//        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
 
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
+        Intent launchIntent = getIntent();
+        Bundle extras = launchIntent.getExtras();
         if (extras != null) {
+            //either this activity is started by the system on creating a new widget or by
+            //clicking on a widget in active configuration mode
             mAppWidgetId = extras.getInt(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID);
+                    AppWidgetManager.EXTRA_APPWIDGET_ID, extras.getInt("widgetId"));
+
+            launchPackageName = extras.getString("packageName");
+//            isConfigModeOn = extras.getBoolean("is_config_mode", sharedPref.getBoolean
+//                    ("isConfigMode", false));
         }
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.widgets_id_to_package_file_key),Context
-                .MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(mAppWidgetId+"", packages.get(0).packageName);
+        if (launchPackageName == null)
+            launchPackageName = getPackageName();
+
+        packageNameTextView.setText(launchPackageName);
+
+        sharedPref = getSharedPreferences(getString(R.string.widgets_id_to_package_file_key),
+                Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+        editor.putString(mAppWidgetId + "", launchPackageName);
         editor.apply();
 
- //       savewidget(null);
-
-        Intent nintent = getPackageManager().getLaunchIntentForPackage(packages.get(0).packageName);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, nintent, 0);
-
-        // Get the layout for the App Widget and attach an on-click listener
-        // to the button
-        RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_visible);
-        views.setOnClickPendingIntent(R.id.visible_widget_layout, pendingIntent);
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        appWidgetManager.updateAppWidget(mAppWidgetId, views);
-        Log.d("xxx", mAppWidgetId+ " from  config activity");
+        updateWidget();
 
         Intent resultValue = new Intent();
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
         setResult(RESULT_OK, resultValue);
-     //   finish();
     }
 
-    public void savewidget(View view) {
-//        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-//        RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.widget_visible);
-//        appWidgetManager.updateAppWidget(mAppWidgetId, views);
-//        Toast.makeText(this, "SAVED", Toast.LENGTH_SHORT).show();
+    @Override
+    public void getSelectedAppPackage(String packageName) {
+        launchPackageName = packageName;
+        packageNameTextView.setText(launchPackageName);
 
+        editor.putString(mAppWidgetId + "", launchPackageName);
+        editor.apply();
 
+        updateWidget();
+    }
 
+    public void chooseApplication(View view) {
+        AppSelectorDialogFragment fragment = new AppSelectorDialogFragment();
+        fragment.show(getFragmentManager(), "app_selector");
+    }
+
+    private void updateWidget() {
+        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        isConfigModeOn = sharedPref.getBoolean("isConfigMode", false);
+
+        Intent intent = getPackageManager().getLaunchIntentForPackage(launchPackageName);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        RemoteViews views;
+        if (isConfigModeOn) {
+            views = new RemoteViews(getPackageName(), R.layout.widget_visible);
+            views.setOnClickPendingIntent(R.id.visible_widget_layout, pendingIntent);
+        } else {
+            views = new RemoteViews(getPackageName(), R.layout.widget_invisible);
+            views.setOnClickPendingIntent(R.id.invisible_widget_layout, pendingIntent);
+        }
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        appWidgetManager.updateAppWidget(mAppWidgetId, views);
     }
 }

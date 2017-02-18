@@ -6,4 +6,6 @@
     <string name="config_title_off">Configuration Mode : OFF</string>
     <string name="config_title_on">Configuration Mode : ON</string>
     <string name="widgets_id_to_package_file_key">"com.shivam.invisiblewidgetspro.WIDGETS_FILE_KEY"</string>
+    <string name="congif_activity_name">Configure Widget</string>
+    <string name="loading_application">Loading application info...</string>
 </resources>
