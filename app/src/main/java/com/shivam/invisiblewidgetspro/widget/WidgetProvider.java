@@ -11,6 +11,8 @@ import android.widget.RemoteViews;
 
 import com.shivam.invisiblewidgetspro.R;
 import com.shivam.invisiblewidgetspro.ui.ConfigurationActivity;
+import com.shivam.invisiblewidgetspro.utils.AppConstants;
+import com.shivam.invisiblewidgetspro.utils.SharedPrefHelper;
 
 /**
  * Created by shivam on 10/02/17.
@@ -18,7 +20,9 @@ import com.shivam.invisiblewidgetspro.ui.ConfigurationActivity;
 
 public class WidgetProvider extends AppWidgetProvider {
 
-    private boolean isConfigMode = false;
+ //   private boolean isConfigMode = false;
+
+    private boolean showWidgets = false;
 
 
     @Override
@@ -27,39 +31,36 @@ public class WidgetProvider extends AppWidgetProvider {
         Intent intent;
         PendingIntent pendingIntent;
         RemoteViews views;
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                context.getString(R.string.widgets_id_to_package_file_key),
-                Context.MODE_PRIVATE);
         String packageName;
 
-        if(isConfigMode) {
-            //todo show app widget id
+        if(showWidgets) {
+            //show all widgets
             for (int appWidgetId : appWidgetIds) {
-                packageName = sharedPref.getString(appWidgetId + "", context.getPackageName());
+                packageName = SharedPrefHelper.getPackageNameForWidgetId(context, appWidgetId);
 
                 intent = new Intent(context, ConfigurationActivity.class);
-                intent.putExtra("packageName", packageName);
-                intent.putExtra("widgetId", appWidgetId);
-//                intent.putExtra("is_config_mode", isConfigMode);
+                intent.putExtra(AppConstants.PACKAGE_NAME_KEY, packageName);
+                intent.putExtra(AppConstants.WIDGET_ID_KEY, appWidgetId);
                 pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
                 views = new RemoteViews(context.getPackageName(), R.layout.widget_visible);
+                views.setCharSequence(R.id.widget_id_visible, "setText", "#"+appWidgetId);
                 views.setOnClickPendingIntent(R.id.visible_widget_layout, pendingIntent);
 
                 appWidgetManager.updateAppWidget(appWidgetId, views);
             }
         } else {
+            //hide all widgets
             for (int appWidgetId : appWidgetIds) {
-                packageName = sharedPref.getString(appWidgetId + "", context.getPackageName());
+                packageName = SharedPrefHelper.getPackageNameForWidgetId(context, appWidgetId);
 
                 intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+                //Not needed because the main activity will be launched and not the config activity
+//                if(packageName.equals(context.getPackageCodePath())) {
+//                    intent.putExtra(AppConstants.PACKAGE_NAME_KEY, packageName);
+//                    intent.putExtra(AppConstants.WIDGET_ID_KEY, appWidgetId);
+//                }
                 pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-                if(packageName.equals(context.getPackageCodePath())) {
-                    intent.putExtra("packageName", packageName);
-                    intent.putExtra("widgetId", appWidgetId);
-//                    intent.putExtra("is_config_mode", isConfigMode);
-                }
 
                 views = new RemoteViews(context.getPackageName(), R.layout.widget_invisible);
                 views.setOnClickPendingIntent(R.id.invisible_widget_layout, pendingIntent);
@@ -67,16 +68,18 @@ public class WidgetProvider extends AppWidgetProvider {
                 appWidgetManager.updateAppWidget(appWidgetId, views);
             }
         }
+
+        showWidgets = false;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-       if(intent.getAction().equals("com.shivam.invisiblewidgetspro.MANUAL_APPWIDGET_UPDATE")) {
+       if(intent.getAction().equals(AppConstants.MANUAL_WIDGET_UPDATE)) {
            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context,
                    getClass()));
 
-           isConfigMode = intent.getBooleanExtra("is_config_mode", false);
+           showWidgets =  intent.getBooleanExtra(AppConstants.CONFIG_MODE_KEY, false);
 
            onUpdate(context, appWidgetManager, appWidgetIds);
 
@@ -86,7 +89,7 @@ public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         SharedPreferences sharedPref = context.getSharedPreferences(
-                context.getString(R.string.widgets_id_to_package_file_key),
+                AppConstants.WIDGETS_MAP_KEY,
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         for(int appWidgetId : appWidgetIds) {

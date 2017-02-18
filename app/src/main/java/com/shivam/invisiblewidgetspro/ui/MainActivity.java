@@ -1,8 +1,5 @@
 package com.shivam.invisiblewidgetspro.ui;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.CompoundButton;
@@ -11,8 +8,12 @@ import android.widget.TextView;
 
 import com.facebook.stetho.Stetho;
 import com.shivam.invisiblewidgetspro.R;
+import com.shivam.invisiblewidgetspro.utils.SharedPrefHelper;
+import com.shivam.invisiblewidgetspro.utils.UpdateWidgetHelper;
 
 public class MainActivity extends AppCompatActivity {
+
+    private boolean isConfigModeOn;
 
     private TextView configDesc;
     private TextView configTitle;
@@ -31,17 +32,14 @@ public class MainActivity extends AppCompatActivity {
         //check what happens when you randomly enter exit activity and don't want to change
         //the config mode automatically
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        boolean isConfigModeOn = sharedPref.getBoolean("isConfigMode", false);
+        isConfigModeOn = SharedPrefHelper.getConfigModeValue(this);
 
         if(isConfigModeOn) {
             configSwitch.setChecked(true);
-
             configModeOn();
         }
         else {
             configSwitch.setChecked(false);
-
             configModeOff();
         }
 
@@ -59,38 +57,40 @@ public class MainActivity extends AppCompatActivity {
         setupStetho();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        boolean b = SharedPrefHelper.getConfigModeValue(this);
+        if(isConfigModeOn != b) {
+            isConfigModeOn = b;
+
+            if(isConfigModeOn) {
+                configSwitch.setChecked(true);
+                configModeOn();
+            }
+            else {
+                configSwitch.setChecked(false);
+                configModeOff();
+            }
+        }
+    }
+
     private void configModeOn() {
         configDesc.setText(getString(R.string.config_mode_desc_on));
         configTitle.setText(getString(R.string.config_title_on));
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean("isConfigMode", true);
-        editor.apply();
+        SharedPrefHelper.setConfigModeValue(this, true);
 
-        updateWidgets(true);
+        UpdateWidgetHelper.showWidgets(this);
     }
 
     private void configModeOff() {
         configDesc.setText(getString(R.string.config_mode_desc_off));
         configTitle.setText(getString(R.string.config_title_off));
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean("isConfigMode", false);
-        editor.apply();
+        SharedPrefHelper.setConfigModeValue(this, false);
 
-        updateWidgets(false);
-    }
-
-    private void updateWidgets(Boolean isConfigMode) {
-        Intent manualWidgetUpdateIntent =
-                new Intent("com.shivam.invisiblewidgetspro.MANUAL_APPWIDGET_UPDATE")
-                .setPackage(getPackageName());
-
-        manualWidgetUpdateIntent.putExtra("is_config_mode", isConfigMode);
-
-        sendBroadcast(manualWidgetUpdateIntent);
+        UpdateWidgetHelper.hideWidgets(this);
     }
 
     private void setupStetho() {

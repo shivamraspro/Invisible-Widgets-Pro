@@ -12,6 +12,8 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.shivam.invisiblewidgetspro.R;
+import com.shivam.invisiblewidgetspro.utils.AppConstants;
+import com.shivam.invisiblewidgetspro.utils.SharedPrefHelper;
 
 public class ConfigurationActivity extends AppCompatActivity implements AppSelectorDialogFragment.AppSelectedListener {
 
@@ -38,9 +40,9 @@ public class ConfigurationActivity extends AppCompatActivity implements AppSelec
             //either this activity is started by the system on creating a new widget or by
             //clicking on a widget in active configuration mode
             mAppWidgetId = extras.getInt(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID, extras.getInt("widgetId"));
+                    AppWidgetManager.EXTRA_APPWIDGET_ID, extras.getInt(AppConstants.WIDGET_ID_KEY));
 
-            launchPackageName = extras.getString("packageName");
+            launchPackageName = extras.getString(AppConstants.PACKAGE_NAME_KEY);
 //            isConfigModeOn = extras.getBoolean("is_config_mode", sharedPref.getBoolean
 //                    ("isConfigMode", false));
         }
@@ -49,11 +51,7 @@ public class ConfigurationActivity extends AppCompatActivity implements AppSelec
 
         packageNameTextView.setText(launchPackageName);
 
-        sharedPref = getSharedPreferences(getString(R.string.widgets_id_to_package_file_key),
-                Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
-        editor.putString(mAppWidgetId + "", launchPackageName);
-        editor.apply();
+        SharedPrefHelper.setPackageNameForWidgetId(this, mAppWidgetId, launchPackageName);
 
         updateWidget();
 
@@ -67,8 +65,7 @@ public class ConfigurationActivity extends AppCompatActivity implements AppSelec
         launchPackageName = packageName;
         packageNameTextView.setText(launchPackageName);
 
-        editor.putString(mAppWidgetId + "", launchPackageName);
-        editor.apply();
+        SharedPrefHelper.setPackageNameForWidgetId(this, mAppWidgetId, launchPackageName);
 
         updateWidget();
     }
@@ -80,7 +77,7 @@ public class ConfigurationActivity extends AppCompatActivity implements AppSelec
 
     private void updateWidget() {
         sharedPref = getPreferences(Context.MODE_PRIVATE);
-        isConfigModeOn = sharedPref.getBoolean("isConfigMode", false);
+        isConfigModeOn = SharedPrefHelper.getConfigModeValue(this);
 
         Intent intent = getPackageManager().getLaunchIntentForPackage(launchPackageName);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
