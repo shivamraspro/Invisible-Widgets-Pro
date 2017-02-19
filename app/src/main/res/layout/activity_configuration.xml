@@ -75,7 +75,15 @@
                 <!--android:textColor="@color/black"/>-->
                 <!--</LinearLayout>-->
 
-                <include layout="@layout/list_item"/>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp">
+
+                    <include layout="@layout/list_item"/>
+                </FrameLayout>
             </LinearLayout>
 
         </android.support.v7.widget.CardView>

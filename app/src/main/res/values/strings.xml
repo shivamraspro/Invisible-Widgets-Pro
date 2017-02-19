@@ -1,8 +1,14 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
     <string name="app_name">AAAInvisible Widgets Pro</string>
     <!--<string name="config_mode_switch_title">Configuration Mode</string>-->
-    <string name="config_mode_desc_on">Configuration Mode is now ACTIVE</string>
-    <string name="config_mode_desc_off">Configuration Mode is now INACTIVE</string>
+    <string name="config_mode_desc_on">
+        Configuration Mode is now ACTIVE.\nAll the widgets are now visible!\nTap a widget from the
+        home screen to configure it.\nDon\'t forget to turnoff the Configuration Mode.
+    </string>
+    <string name="config_mode_desc_off">
+        Configuration Mode is now INACTIVE.\nAll the widgets are now invisible!\nYou can now open
+        your selected app by tapping the widget\'s location.\nYou can always turn on the Configuration Mode if you forget the widget\'s location or to configure it.
+    </string>
     <string name="config_title_off">Configuration Mode : OFF</string>
     <string name="config_title_on">Configuration Mode : ON</string>
     <!--<string name="widgets_id_to_package_file_key">"com.shivam.invisiblewidgetspro.WIDGETS_FILE_KEY"</string>-->
