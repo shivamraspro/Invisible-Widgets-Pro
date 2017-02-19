@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/listview_installed_apps"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_installed_apps"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

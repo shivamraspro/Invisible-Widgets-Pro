@@ -8,16 +8,19 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.shivam.invisiblewidgetspro.R;
 import com.shivam.invisiblewidgetspro.extras.AppsAdapter;
+import com.shivam.invisiblewidgetspro.extras.RecyclerViewClickListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,8 +35,8 @@ import butterknife.ButterKnife;
 
 public class AppSelectorDialogFragment extends DialogFragment {
 
-    @BindView(R.id.listview_installed_apps)
-    ListView listView;
+    @BindView(R.id.recyclerview_installed_apps)
+    RecyclerView recyclerView;
 
     private AppsAdapter adapter;
     private Context mContext;
@@ -50,15 +53,17 @@ public class AppSelectorDialogFragment extends DialogFragment {
 
         //todo use recyclerview instead of list view
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        recyclerView.addOnItemTouchListener(new RecyclerViewClickListener(getActivity(), new
+                RecyclerViewClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
                 ((AppSelectedListener) getActivity()).getSelectedAppPackage(applist.get(position).packageName);
 
                 dismiss();
             }
-        });
+        }));
 
         new LoadApplications().execute();
 
@@ -81,6 +86,16 @@ public class AppSelectorDialogFragment extends DialogFragment {
                     (PackageManager.GET_META_DATA));
             //todo sort applist by app name
 
+            Collections.sort(applist, new Comparator<ApplicationInfo>() {
+                @Override
+                public int compare(ApplicationInfo applicationInfo, ApplicationInfo t1) {
+                    String name1 = applicationInfo.loadLabel(mContext.getPackageManager()).toString();
+                    String name2 = t1.loadLabel(mContext.getPackageManager()).toString();
+
+                    return name1.compareToIgnoreCase(name2);
+                }
+            });
+
             adapter = new AppsAdapter(mContext, applist);
             return null;
         }
@@ -89,7 +104,7 @@ public class AppSelectorDialogFragment extends DialogFragment {
 
         @Override
         protected void onPostExecute(Void result) {
-            listView.setAdapter(adapter);
+            recyclerView.setAdapter(adapter);
             progress.dismiss();
 
             super.onPostExecute(result);
