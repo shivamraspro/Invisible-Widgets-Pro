@@ -61,13 +61,13 @@ public class ConfigurationActivity extends AppCompatActivity implements AppSelec
     private CharSequence appName;
     private String packageName;
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        //So that updating the widget action is performed only once while exiting the activity
-        updateWidget();
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//
+//        //So that updating the widget action is performed only once while exiting the activity
+//        updateWidget();
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,11 +103,29 @@ public class ConfigurationActivity extends AppCompatActivity implements AppSelec
 
         //The extras bundle will have a default Id if configActivity is launched by the sytem to
         //create a new widget otherwise it will have a widget Id assigned to it in WidgetProvider
-        widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, extras.getInt(AppConstants.WIDGET_ID_KEY));
-        packageName = extras.getString(AppConstants.PACKAGE_NAME_KEY, getPackageName());
+//        widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, extras.getInt(AppConstants.WIDGET_ID_KEY));
+//        packageName = extras.getString(AppConstants.PACKAGE_NAME_KEY);
+//
+//        if(packageName == null)
+//            packageName = getPackageName();
+
+        widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
+        if(widgetId == 0) {
+            widgetId = extras.getInt(AppConstants.WIDGET_ID_KEY);
+            packageName = extras.getString(AppConstants.PACKAGE_NAME_KEY);
+        }
+        else {
+            packageName = getPackageName();
+        }
+
+        //Save Widget Information in SharedPreferences
         SharedPrefHelper.setPackageNameForWidgetId(this, widgetId, packageName);
 
+        //Show Widget Information in Configuration Activity
         showWidgetInformation();
+
+        //Update the corresponding widget on home screen
+        updateWidget();
 
         Intent resultValue = new Intent();
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
@@ -174,10 +192,13 @@ public class ConfigurationActivity extends AppCompatActivity implements AppSelec
     public void getSelectedAppPackage(String packageName) {
         this.packageName = packageName;
 
+        //Save Widget Information in SharedPreferences
+        SharedPrefHelper.setPackageNameForWidgetId(this, widgetId, packageName);
+
+        //Show Widget Information in Configuration Activity
         showWidgetInformation();
 
-        SharedPrefHelper.setPackageNameForWidgetId(this, widgetId, this.packageName);
-
+        //Update the corresponding widget on home screen
         updateWidget();
     }
 
@@ -200,6 +221,7 @@ public class ConfigurationActivity extends AppCompatActivity implements AppSelec
             intent = new Intent(getApplicationContext(), ConfigurationActivity.class);
             intent.putExtra(AppConstants.PACKAGE_NAME_KEY, packageName);
             intent.putExtra(AppConstants.WIDGET_ID_KEY, widgetId);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
             views = new RemoteViews(getPackageName(), R.layout.widget_visible);

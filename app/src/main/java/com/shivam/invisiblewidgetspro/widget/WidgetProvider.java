@@ -40,6 +40,7 @@ public class WidgetProvider extends AppWidgetProvider {
                 intent = new Intent(context, ConfigurationActivity.class);
                 intent.putExtra(AppConstants.PACKAGE_NAME_KEY, packageName);
                 intent.putExtra(AppConstants.WIDGET_ID_KEY, appWidgetId);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
                 views = new RemoteViews(context.getPackageName(), R.layout.widget_visible);

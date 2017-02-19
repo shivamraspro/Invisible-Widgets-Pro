@@ -1,5 +1,5 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
-    <string name="app_name">Invisible Widgets Pro</string>
+    <string name="app_name">AAAInvisible Widgets Pro</string>
     <!--<string name="config_mode_switch_title">Configuration Mode</string>-->
     <string name="config_mode_desc_on">Configuration Mode is now ACTIVE</string>
     <string name="config_mode_desc_off">Configuration Mode is now INACTIVE</string>
