@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 
 import com.shivam.invisiblewidgetspro.R;
@@ -55,11 +54,6 @@ public class WidgetProvider extends AppWidgetProvider {
                 packageName = SharedPrefHelper.getPackageNameForWidgetId(context, appWidgetId);
 
                 intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-                //Not needed because the main activity will be launched and not the config activity
-//                if(packageName.equals(context.getPackageCodePath())) {
-//                    intent.putExtra(AppConstants.PACKAGE_NAME_KEY, packageName);
-//                    intent.putExtra(AppConstants.WIDGET_ID_KEY, appWidgetId);
-//                }
                 pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
                 views = new RemoteViews(context.getPackageName(), R.layout.widget_invisible);
@@ -88,13 +82,8 @@ public class WidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                AppConstants.WIDGETS_MAP_KEY,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
         for(int appWidgetId : appWidgetIds) {
-            editor.remove(appWidgetId+"");
+            SharedPrefHelper.deletePackageNameForId(context, appWidgetId);
         }
-        editor.apply();
     }
 }

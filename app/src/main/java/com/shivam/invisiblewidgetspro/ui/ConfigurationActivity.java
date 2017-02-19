@@ -2,94 +2,219 @@ package com.shivam.invisiblewidgetspro.ui;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RemoteViews;
+import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.shivam.invisiblewidgetspro.R;
 import com.shivam.invisiblewidgetspro.utils.AppConstants;
 import com.shivam.invisiblewidgetspro.utils.SharedPrefHelper;
+import com.shivam.invisiblewidgetspro.utils.UpdateWidgetHelper;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ConfigurationActivity extends AppCompatActivity implements AppSelectorDialogFragment.AppSelectedListener {
 
-    private int mAppWidgetId;
-    private String launchPackageName;
-    private TextView packageNameTextView;
-    private SharedPreferences sharedPref;
-    private SharedPreferences.Editor editor;
     private boolean isConfigModeOn;
+
+    @BindView(R.id.config_desc)
+    TextView configDesc;
+
+    @BindView(R.id.config_title)
+    TextView configTitle;
+
+    @BindView(R.id.config_switch)
+    Switch configSwitch;
+
+    @BindView(R.id.list_item_container)
+    LinearLayout listItemContainer;
+
+    @BindView(R.id.widget_id_info)
+    TextView widgetIdInfoTextView;
+
+    @BindView(R.id.app_icon)
+    ImageView appIconImageView;
+
+    @BindView(R.id.app_name)
+    TextView appNameTextView;
+
+    @BindView(R.id.app_pkg_name)
+    TextView appPackageNameTextView;
+
+    @BindView(R.id.adViewConfig)
+    AdView mAdView;
+
+    private int widgetId;
+    private Drawable appIcon;
+    private CharSequence appName;
+    private String packageName;
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        //So that updating the widget action is performed only once while exiting the activity
+        updateWidget();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
 
-        packageNameTextView = (TextView) findViewById(R.id.selected_package);
+        ButterKnife.bind(this);
 
-//        final PackageManager pm = getPackageManager();
-//        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+        isConfigModeOn = SharedPrefHelper.getConfigModeValue(this);
 
-        Intent launchIntent = getIntent();
-        Bundle extras = launchIntent.getExtras();
-        if (extras != null) {
-            //either this activity is started by the system on creating a new widget or by
-            //clicking on a widget in active configuration mode
-            mAppWidgetId = extras.getInt(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID, extras.getInt(AppConstants.WIDGET_ID_KEY));
-
-            launchPackageName = extras.getString(AppConstants.PACKAGE_NAME_KEY);
-//            isConfigModeOn = extras.getBoolean("is_config_mode", sharedPref.getBoolean
-//                    ("isConfigMode", false));
+        if (isConfigModeOn) {
+            configSwitch.setChecked(true);
+            configModeOn();
+        } else {
+            configSwitch.setChecked(false);
+            configModeOff();
         }
-        if (launchPackageName == null)
-            launchPackageName = getPackageName();
 
-        packageNameTextView.setText(launchPackageName);
+        configSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                isConfigModeOn = isChecked;
+                if (isChecked) {
+                    configModeOn();
+                } else {
+                    configModeOff();
+                }
+            }
+        });
 
-        SharedPrefHelper.setPackageNameForWidgetId(this, mAppWidgetId, launchPackageName);
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
 
-        updateWidget();
+        //The extras bundle will have a default Id if configActivity is launched by the sytem to
+        //create a new widget otherwise it will have a widget Id assigned to it in WidgetProvider
+        widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, extras.getInt(AppConstants.WIDGET_ID_KEY));
+        packageName = extras.getString(AppConstants.PACKAGE_NAME_KEY, getPackageName());
+        SharedPrefHelper.setPackageNameForWidgetId(this, widgetId, packageName);
+
+        showWidgetInformation();
 
         Intent resultValue = new Intent();
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
         setResult(RESULT_OK, resultValue);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+    }
+
+    private void showWidgetInformation() {
+
+        widgetIdInfoTextView.setText(getString(R.string.widget_id_info_title, widgetId));
+
+        try {
+            appIcon = getPackageManager().getApplicationIcon(packageName);
+            appName = getPackageManager().getApplicationInfo(packageName, 0).loadLabel
+                    (getPackageManager());
+        } catch (Exception e) {
+//            d = getApplicationContext().getApplicationInfo().loadIcon(getPackageManager());
+//            appName = getApplicationContext().getApplicationInfo().loadLabel(getPackageManager());
+        }
+
+        appIconImageView.setImageDrawable(appIcon);
+        appNameTextView.setText(appName);
+        appPackageNameTextView.setText(packageName);
+    }
+
+    private void configModeOn() {
+        configDesc.setText(getString(R.string.config_mode_desc_on));
+        configTitle.setText(getString(R.string.config_title_on));
+
+        SharedPrefHelper.setConfigModeValue(this, true);
+
+        UpdateWidgetHelper.showWidgets(this);
+    }
+
+    private void configModeOff() {
+        configDesc.setText(getString(R.string.config_mode_desc_off));
+        configTitle.setText(getString(R.string.config_title_off));
+
+        SharedPrefHelper.setConfigModeValue(this, false);
+
+        UpdateWidgetHelper.hideWidgets(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        boolean b = SharedPrefHelper.getConfigModeValue(this);
+        if (isConfigModeOn != b) {
+            isConfigModeOn = b;
+
+            if (isConfigModeOn) {
+                configSwitch.setChecked(true);
+                configModeOn();
+            } else {
+                configSwitch.setChecked(false);
+                configModeOff();
+            }
+        }
     }
 
     @Override
     public void getSelectedAppPackage(String packageName) {
-        launchPackageName = packageName;
-        packageNameTextView.setText(launchPackageName);
+        this.packageName = packageName;
 
-        SharedPrefHelper.setPackageNameForWidgetId(this, mAppWidgetId, launchPackageName);
+        showWidgetInformation();
+
+        SharedPrefHelper.setPackageNameForWidgetId(this, widgetId, this.packageName);
 
         updateWidget();
     }
 
+    @OnClick(R.id.list_item_container)
     public void chooseApplication(View view) {
         AppSelectorDialogFragment fragment = new AppSelectorDialogFragment();
-        fragment.show(getFragmentManager(), "app_selector");
+        fragment.show(getFragmentManager(), AppConstants.APP_SELECTOR_FRAGMENT_TAG);
     }
 
     private void updateWidget() {
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
-        isConfigModeOn = SharedPrefHelper.getConfigModeValue(this);
-
-        Intent intent = getPackageManager().getLaunchIntentForPackage(launchPackageName);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        Intent intent;
+        PendingIntent pendingIntent;
         RemoteViews views;
+
+        //Not checking the value of isConfigModeOn as it is updated correctly every time
+        //the switch is toggled, activity is created or entered (see OnCreate/OnStart)
+
         if (isConfigModeOn) {
+            //show widget
+            intent = new Intent(getApplicationContext(), ConfigurationActivity.class);
+            intent.putExtra(AppConstants.PACKAGE_NAME_KEY, packageName);
+            intent.putExtra(AppConstants.WIDGET_ID_KEY, widgetId);
+            pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
             views = new RemoteViews(getPackageName(), R.layout.widget_visible);
+            views.setCharSequence(R.id.widget_id_visible, "setText", "#" + widgetId);
             views.setOnClickPendingIntent(R.id.visible_widget_layout, pendingIntent);
         } else {
+            //hide widget
+            intent = getPackageManager().getLaunchIntentForPackage(packageName);
+            pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
             views = new RemoteViews(getPackageName(), R.layout.widget_invisible);
             views.setOnClickPendingIntent(R.id.invisible_widget_layout, pendingIntent);
         }
+
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-        appWidgetManager.updateAppWidget(mAppWidgetId, views);
+        appWidgetManager.updateAppWidget(widgetId, views);
     }
 }

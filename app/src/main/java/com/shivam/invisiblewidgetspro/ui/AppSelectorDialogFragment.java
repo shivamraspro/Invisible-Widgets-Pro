@@ -13,13 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import com.shivam.invisiblewidgetspro.R;
 import com.shivam.invisiblewidgetspro.extras.AppsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by shivam on 11/02/17.
@@ -29,8 +31,10 @@ import java.util.List;
  */
 
 public class AppSelectorDialogFragment extends DialogFragment {
-    private ListView listView;
-    private ProgressBar loadingSpinner;
+
+    @BindView(R.id.listview_installed_apps)
+    ListView listView;
+
     private AppsAdapter adapter;
     private Context mContext;
     private ArrayList<ApplicationInfo> applist;
@@ -39,10 +43,12 @@ public class AppSelectorDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dialog, container);
+
+        ButterKnife.bind(this, view);
+
         mContext = getActivity();
 
         //todo use recyclerview instead of list view
-        listView = (ListView) view.findViewById(R.id.listview_installed_apps);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

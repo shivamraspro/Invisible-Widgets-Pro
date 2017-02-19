@@ -7,30 +7,37 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.facebook.stetho.Stetho;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.shivam.invisiblewidgetspro.R;
 import com.shivam.invisiblewidgetspro.utils.SharedPrefHelper;
 import com.shivam.invisiblewidgetspro.utils.UpdateWidgetHelper;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
     private boolean isConfigModeOn;
 
-    private TextView configDesc;
-    private TextView configTitle;
-    private Switch configSwitch;
+    @BindView(R.id.config_desc)
+    TextView configDesc;
+
+    @BindView(R.id.config_title)
+    TextView configTitle;
+
+    @BindView(R.id.config_switch)
+    Switch configSwitch;
+
+    @BindView(R.id.adViewMain)
+    AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        configSwitch = (Switch) findViewById(R.id.config_switch);
-        configDesc = (TextView) findViewById(R.id.config_desc);
-        configTitle = (TextView) findViewById(R.id.config_title);
-
-        //todo
-        //check what happens when you randomly enter exit activity and don't want to change
-        //the config mode automatically
+        ButterKnife.bind(this);
 
         isConfigModeOn = SharedPrefHelper.getConfigModeValue(this);
 
@@ -53,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         setupStetho();
     }

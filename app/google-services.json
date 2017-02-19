@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "749365629935",
+    "firebase_url": "https://invisiblewidgetspro.firebaseio.com",
+    "project_id": "invisiblewidgetspro",
+    "storage_bucket": "invisiblewidgetspro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749365629935:android:7bb142f20ce37569",
+        "android_client_info": {
+          "package_name": "com.shivam.invisiblewidgetspro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "749365629935-q144e2p79ecg0elvn5ehd50j38a7vho5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shivam.invisiblewidgetspro",
+            "certificate_hash": "0738CF40DF09DA36625C7421F9CEB69FEE9F28C6"
+          }
+        },
+        {
+          "client_id": "749365629935-phb1mnflrbph4re8vgta54virofr8f0r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA02MAi-T_or5eRiKTV29KtNkM7NlEUAo8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "749365629935-phb1mnflrbph4re8vgta54virofr8f0r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

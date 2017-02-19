@@ -8,6 +8,8 @@ public class AppConstants {
     public static final String CONFIG_MODE_KEY = "config_mode";
     public static final String PACKAGE_NAME_KEY = "packageName";
     public static final String WIDGET_ID_KEY = "widget_id";
+    public static final String APP_SELECTOR_FRAGMENT_TAG = "app_selector";
+
 
 
     //Shared Prefs File Names

@@ -41,4 +41,12 @@ public class SharedPrefHelper {
         editor.putString(widgetId + "", packageName);
         editor.apply();
     }
+
+    public static void deletePackageNameForId(Context context, int widgetId) {
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                AppConstants.WIDGETS_MAP_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove(widgetId + "");
+        editor.apply();
+    }
 }

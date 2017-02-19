@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/tools">
     <string name="app_name">Invisible Widgets Pro</string>
     <!--<string name="config_mode_switch_title">Configuration Mode</string>-->
     <string name="config_mode_desc_on">Configuration Mode is now ACTIVE</string>
@@ -8,4 +8,6 @@
     <!--<string name="widgets_id_to_package_file_key">"com.shivam.invisiblewidgetspro.WIDGETS_FILE_KEY"</string>-->
     <string name="congif_activity_name">Configure Widget</string>
     <string name="loading_application">Loading application info...</string>
+    <string name="widget_id_info_title">Widget ID : #<xliff:g id="wId">%d</xliff:g></string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 </resources>
