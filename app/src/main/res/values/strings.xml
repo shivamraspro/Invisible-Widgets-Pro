@@ -1,9 +1,9 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
-    <string name="app_name">AAAInvisible Widgets Pro</string>
+    <string name="app_name">Invisible Widgets Pro</string>
     <!--<string name="config_mode_switch_title">Configuration Mode</string>-->
     <string name="config_mode_desc_on">
         Configuration Mode is now ACTIVE.\nAll the widgets are now visible!\nTap a widget from the
-        home screen to configure it.\nDon\'t forget to turnoff the Configuration Mode.
+        home screen to configure it.\nDon\'t forget to turn off the Configuration Mode.
     </string>
     <string name="config_mode_desc_off">
         Configuration Mode is now INACTIVE.\nAll the widgets are now invisible!\nYou can now open

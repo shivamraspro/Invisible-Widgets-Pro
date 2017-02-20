@@ -79,19 +79,22 @@ public class WidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-       if(intent.getAction().equals(AppConstants.MANUAL_WIDGET_UPDATE)) {
+        final String action = intent.getAction();
+        if(action.equals(AppConstants.MANUAL_WIDGET_UPDATE) || action.equals(Intent.ACTION_BOOT_COMPLETED)
+                || action.equals(Intent.ACTION_LOCKED_BOOT_COMPLETED)) {
            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context,
                    getClass()));
 
-           showWidgets =  intent.getBooleanExtra(AppConstants.CONFIG_MODE_KEY, false);
+           showWidgets =  intent.getBooleanExtra(AppConstants.CONFIG_MODE_KEY,
+                   SharedPrefHelper.getConfigModeValue(context));
 
            onUpdate(context, appWidgetManager, appWidgetIds);
        }
        /*
        Workaround to delete a widget since onDeleted is not called while deleting a widget
        */
-       else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_DELETED)) {
+       else if (action.equals(AppWidgetManager.ACTION_APPWIDGET_DELETED)) {
            int appWidgetId = intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,
                    AppWidgetManager.INVALID_APPWIDGET_ID);
 

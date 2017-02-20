@@ -21,14 +21,14 @@ public class UpdateWidgetHelper {
     }
 
     public static void showWidgets(Context context) {
-        Intent hideWidgetsIntent =
+        Intent showWidgetsIntent =
                 new Intent(AppConstants.MANUAL_WIDGET_UPDATE)
                         .setPackage(context.getPackageName());
 
         boolean showWidgets = true;
 
-        hideWidgetsIntent.putExtra(AppConstants.CONFIG_MODE_KEY, showWidgets);
+        showWidgetsIntent.putExtra(AppConstants.CONFIG_MODE_KEY, showWidgets);
 
-        context.sendBroadcast(hideWidgetsIntent);
+        context.sendBroadcast(showWidgetsIntent);
     }
 }
