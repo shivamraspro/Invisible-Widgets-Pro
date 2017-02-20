@@ -107,6 +107,10 @@ public class ConfigurationActivity extends AppCompatActivity
             //This Activity is launched by default while adding a new widget
             packageName = getPackageName();
 
+            SharedPrefHelper.setConfigModeValue(this, true);
+
+            configModeOn(true);
+
             //Save Widget Information in SharedPreferences
             SharedPrefHelper.setPackageNameForWidgetId(this, widgetId, packageName);
 
@@ -115,11 +119,17 @@ public class ConfigurationActivity extends AppCompatActivity
 
             //Update the corresponding widget on home screen
             updateWidget();
+
+            Intent resultValue = new Intent();
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+            setResult(RESULT_OK, resultValue);
+
+            finish();
         }
 
-        Intent resultValue = new Intent();
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
-        setResult(RESULT_OK, resultValue);
+//        Intent resultValue = new Intent();
+//        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+//        setResult(RESULT_OK, resultValue);
 
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -133,8 +143,7 @@ public class ConfigurationActivity extends AppCompatActivity
             appIcon = getPackageManager().getApplicationIcon(packageName);
             appName = getPackageManager().getApplicationInfo(packageName, 0).loadLabel
                     (getPackageManager());
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
 
         appIconImageView.setImageDrawable(appIcon);
         appNameTextView.setText(appName);
@@ -222,6 +231,17 @@ public class ConfigurationActivity extends AppCompatActivity
         showWidgetInformation();
 
         //Update the corresponding widget on home screen
+        updateWidget();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        Intent resultValue = new Intent();
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+        setResult(RESULT_OK, resultValue);
+
         updateWidget();
     }
 

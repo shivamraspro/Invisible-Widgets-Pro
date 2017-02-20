@@ -31,7 +31,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View c = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item, parent, false);
+                .inflate(R.layout.all_app_list_item, parent, false);
         ViewHolder vh = new ViewHolder(c);
 
         return vh;
@@ -63,41 +63,4 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.ViewHolder> {
             pkgName = (TextView) listItem.findViewById(R.id.app_pkg_name);
         }
     }
-
-//    @Override
-//    public int getCount() {
-//        return applicationInfos.size();
-//    }
-//
-//    @Override
-//    public Object getItem(int i) {
-//        return applicationInfos.get(i);
-//    }
-//
-//    @Override
-//    public long getItemId(int i) {
-//        return i;
-//    }
-//
-//    @Override
-//    public View getView(int i, View convertView, ViewGroup viewGroup) {
-//        View view = convertView;
-//        ViewHolder v = null;
-//
-//        if(view == null) {
-//            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            view = inflater.inflate(R.layout.list_item, viewGroup, false);
-//            v = new ViewHolder(view);
-//            view.setTag(v);
-//        }
-//        else {
-//            v = (ViewHolder) view.getTag();
-//        }
-//
-//        v.icon.setImageDrawable(applicationInfos.get(i).loadIcon(mContext.getPackageManager()));
-//        v.name.setText(applicationInfos.get(i).loadLabel(mContext.getPackageManager()));
-//        v.pkgName.setText(applicationInfos.get(i).packageName);
-//
-//        return v.listItem;
-//    }
 }

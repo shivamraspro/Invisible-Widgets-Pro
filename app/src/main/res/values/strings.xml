@@ -7,7 +7,8 @@
     </string>
     <string name="config_mode_desc_off">
         Configuration Mode is now INACTIVE.\nAll the widgets are now invisible!\nYou can now open
-        your selected app by tapping the widget\'s location.\nYou can always turn on the Configuration Mode if you forget the widget\'s location or to configure it.
+        your selected app by tapping the widget\'s location.\nYou can always turn on the
+        Configuration Mode if you forget the widget\'s location or to configure it.
     </string>
     <string name="config_title_off">Configuration Mode : OFF</string>
     <string name="config_title_on">Configuration Mode : ON</string>
@@ -17,4 +18,10 @@
     <string name="widget_id_info_title">Widget ID : #<xliff:g id="wId">%d</xliff:g></string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="loading_text">Loading Applications</string>
+    <string name="widget_count_some">You have <xliff:g id="widgetCount">%d</xliff:g> active
+        widgets.</string>
+    <string name="widget_count_none">You have no active widgets.</string>
+    <string name="widget_count_subtext">Add/Delete widgets from the home screen.</string>
+    <string name="loading_appwidgets">Loading App Widgets</string>
+    <string name="widget_count_one">You have 1 active widget.</string>
 </resources>
