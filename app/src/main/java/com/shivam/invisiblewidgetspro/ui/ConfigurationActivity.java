@@ -25,7 +25,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ConfigurationActivity extends AppCompatActivity implements AppSelectorDialogFragment.AppSelectedListener {
+public class ConfigurationActivity extends AppCompatActivity
+        implements AppSelectorDialogFragment.AppSelectedListener {
 
     private boolean isConfigModeOn;
 
@@ -228,5 +229,22 @@ public class ConfigurationActivity extends AppCompatActivity implements AppSelec
     public void chooseApplication(View view) {
         AppSelectorDialogFragment fragment = new AppSelectorDialogFragment();
         fragment.show(getFragmentManager(), AppConstants.APP_SELECTOR_FRAGMENT_TAG);
+
+        /*
+        Use the following code in future releases to use the dialog as a fragment.
+
+        To implement that, create a fragment for configuration activity's current role
+        and replace that fragment with dialog fragment and vice versa using fragment
+        transactions.
+         */
+
+//        // The device is smaller, so show the fragment fullscreen
+//        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        // For a little polish, specify a transition animation
+//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        // To make it fullscreen, use the 'content' root view as the container
+//        // for the fragment, which is always the root view for the activity
+//        transaction.add(android.R.id.content, newFragment)
+//                .addToBackStack(null).commit();
     }
 }

@@ -16,4 +16,5 @@
     <string name="loading_application">Loading application info...</string>
     <string name="widget_id_info_title">Widget ID : #<xliff:g id="wId">%d</xliff:g></string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="loading_text">Loading Applications</string>
 </resources>

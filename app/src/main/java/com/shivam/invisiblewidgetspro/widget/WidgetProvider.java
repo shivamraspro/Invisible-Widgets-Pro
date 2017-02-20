@@ -37,7 +37,7 @@ public class WidgetProvider extends AppWidgetProvider {
         one of them, irrespective of the fact that they have different intent extras.
 
         To solve this, a dummy action is added for each widget. This action is identical for a
-        particualar widget instance but different for diiferent widget instances.
+        particular widget instance but different for different widget instances.
         */
 
         if(showWidgets) {
