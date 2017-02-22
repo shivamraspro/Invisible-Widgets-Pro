@@ -11,7 +11,7 @@
     <TextView
         android:id="@+id/widget_id_visible"
         android:layout_width="wrap_content"
-        android:text="#123"
+        android:text="#000"
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@color/white"/>

@@ -80,8 +80,8 @@ public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
-        if(action.equals(AppConstants.MANUAL_WIDGET_UPDATE) || action.equals(Intent.ACTION_BOOT_COMPLETED)
-                || action.equals(Intent.ACTION_LOCKED_BOOT_COMPLETED)) {
+        if(action.equals(AppConstants.MANUAL_WIDGET_UPDATE) || action.equals(Intent.ACTION_BOOT_COMPLETED)) {
+
            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context,
                    getClass()));
