@@ -12,9 +12,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.facebook.stetho.Stetho;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.shivam.invisiblewidgetspro.R;
@@ -54,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.empty_view_appwidgets)
     LinearLayout emptyView;
 
+    @BindView(R.id.scroll_view_main)
+    ScrollView scrollView;
+
     private int[] appWidgetIds;
     private Context mContext;
     private AppsWidgetsAdapter adapter;
@@ -89,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //appWidgetIds = new int[]{};
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setEmptyView(emptyView);
         recyclerView.setNestedScrollingEnabled(false);
@@ -101,6 +104,15 @@ public class MainActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
 
         loadWidgetInfos = false;
+
+        setUpStetho();
+    }
+
+    private void setUpStetho() {
+        Stetho.initialize(Stetho.newInitializerBuilder(this)
+                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+                .build()
+        );
     }
 
     private void updateWidgetsInfo() {
@@ -118,6 +130,14 @@ public class MainActivity extends AppCompatActivity {
             recyclerView.setVisibility(View.VISIBLE);
             activeWidgetInfo.setText(getString(R.string.widget_count_some, appWidgetIds.length));
         }
+
+        //scrolls the scroll view to top
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(View.FOCUS_UP);
+            }
+        });
     }
 
     @Override

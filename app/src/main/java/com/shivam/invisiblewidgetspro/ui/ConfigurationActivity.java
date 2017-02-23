@@ -127,10 +127,6 @@ public class ConfigurationActivity extends AppCompatActivity
             finish();
         }
 
-//        Intent resultValue = new Intent();
-//        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
-//        setResult(RESULT_OK, resultValue);
-
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
