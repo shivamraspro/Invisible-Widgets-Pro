@@ -4,7 +4,7 @@
     android:initialLayout="@layout/widget_visible"
     android:minHeight="40dp"
     android:minWidth="40dp"
-    android:previewImage="@mipmap/ic_launcher"
+    android:previewImage="@mipmap/default_app_icon"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0">
 </appwidget-provider>

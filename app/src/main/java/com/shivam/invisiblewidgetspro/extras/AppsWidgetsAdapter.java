@@ -1,6 +1,7 @@
 package com.shivam.invisiblewidgetspro.extras;
 
 import android.content.Context;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,12 +38,20 @@ public class AppsWidgetsAdapter extends RecyclerView.Adapter<AppsWidgetsAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int i) {
-        holder.icon.setImageDrawable(appWidgetData.get(i).getApplicationInfo()
-                .loadIcon(mContext.getPackageManager()));
-        holder.name.setText(appWidgetData.get(i).getApplicationInfo()
-                .loadLabel(mContext.getPackageManager()));
-        holder.id.setText("#" + appWidgetData.get(i).getWidgetId());
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        if (appWidgetData.get(position).getApplicationInfo() == null) {
+            holder.icon.setImageDrawable(ResourcesCompat.getDrawable(mContext.getResources(), R
+                    .mipmap.default_app_icon, null));
+            holder.name.setText(mContext.getString(R.string.no_launcher_app));
+            holder.name.setTextColor(ResourcesCompat.getColor(mContext.getResources(), R.color
+                    .cyan_700, null));
+        } else {
+            holder.icon.setImageDrawable(appWidgetData.get(position).getApplicationInfo()
+                    .loadIcon(mContext.getPackageManager()));
+            holder.name.setText(appWidgetData.get(position).getApplicationInfo()
+                    .loadLabel(mContext.getPackageManager()));
+        }
+        holder.id.setText("#" + appWidgetData.get(position).getWidgetId());
     }
 
     @Override

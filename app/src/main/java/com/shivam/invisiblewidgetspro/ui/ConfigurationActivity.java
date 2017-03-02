@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -116,16 +117,26 @@ public class ConfigurationActivity extends AppCompatActivity
 
         widgetIdInfoTextView.setText(getString(R.string.widget_id_info_title, widgetId));
 
-        try {
-            appIcon = getPackageManager().getApplicationIcon(packageName);
-            appName = getPackageManager().getApplicationInfo(packageName, 0).loadLabel
-                    (getPackageManager());
-        } catch (Exception e) {
-        }
+        if (packageName.equals(AppConstants.PLACEHOLDER_WIDGET)) {
+            appPackageNameTextView.setVisibility(View.GONE);
+            appIconImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R
+                    .mipmap.default_app_icon, null));
+            appNameTextView.setText(getString(R.string.no_launcher_app));
+            appNameTextView.setTextColor(ResourcesCompat.getColor(getResources(), R.color
+                    .cyan_700, null));
 
-        appIconImageView.setImageDrawable(appIcon);
-        appNameTextView.setText(appName);
-        appPackageNameTextView.setText(packageName);
+        } else {
+            try {
+                appIcon = getPackageManager().getApplicationIcon(packageName);
+                appName = getPackageManager().getApplicationInfo(packageName, 0).loadLabel
+                        (getPackageManager());
+            } catch (Exception e) {
+            }
+
+            appIconImageView.setImageDrawable(appIcon);
+            appNameTextView.setText(appName);
+            appPackageNameTextView.setText(packageName);
+        }
     }
 
     private void updateWidget() {

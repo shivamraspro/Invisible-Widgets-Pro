@@ -22,6 +22,7 @@ import com.google.android.gms.ads.AdView;
 import com.shivam.invisiblewidgetspro.R;
 import com.shivam.invisiblewidgetspro.extras.AppsWidgetsAdapter;
 import com.shivam.invisiblewidgetspro.extras.NonScrollableRecyclerViewEmptyViewSupport;
+import com.shivam.invisiblewidgetspro.utils.AppConstants;
 import com.shivam.invisiblewidgetspro.utils.SharedPrefHelper;
 import com.shivam.invisiblewidgetspro.utils.UpdateWidgetHelper;
 import com.shivam.invisiblewidgetspro.widget.WidgetProvider;
@@ -201,13 +202,21 @@ public class MainActivity extends AppCompatActivity {
 
             ArrayList<Dataset> appWidgetData = new ArrayList<>();
 
+            String packageName;
+
             for(int i=0; i < appWidgetIds.length; i++) {
                 try {
-                    appWidgetData.add(new Dataset(
-                            getPackageManager().getApplicationInfo(
-                                    SharedPrefHelper.getPackageNameForWidgetId(
-                                            mContext, appWidgetIds[i]), 0),
-                            appWidgetIds[i]));
+                    packageName = SharedPrefHelper.getPackageNameForWidgetId(mContext,
+                            appWidgetIds[i]);
+                    if(packageName.equals(AppConstants.PLACEHOLDER_WIDGET)) {
+                        appWidgetData.add(new Dataset(null, appWidgetIds[i]));
+                    } else {
+                        appWidgetData.add(new Dataset(
+                                getPackageManager().getApplicationInfo(
+                                        SharedPrefHelper.getPackageNameForWidgetId(
+                                                mContext, appWidgetIds[i]), 0),
+                                appWidgetIds[i]));
+                    }
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }

@@ -24,4 +24,6 @@
     <string name="widget_count_subtext">Add/Delete widgets from the home screen.</string>
     <string name="loading_appwidgets">Loading App Widgets</string>
     <string name="widget_count_one">You have 1 active widget.</string>
+    <string name="no_launcher_app">Placeholder Widget Only</string>
+    <string name="select_launcher_app">Associated Application :</string>
 </resources>

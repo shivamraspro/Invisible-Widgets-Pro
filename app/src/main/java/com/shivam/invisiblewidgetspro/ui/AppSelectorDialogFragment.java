@@ -20,6 +20,7 @@ import com.shivam.invisiblewidgetspro.R;
 import com.shivam.invisiblewidgetspro.extras.AppsAdapter;
 import com.shivam.invisiblewidgetspro.extras.RecyclerViewClickListener;
 import com.shivam.invisiblewidgetspro.extras.RecyclerViewEmptyViewSupport;
+import com.shivam.invisiblewidgetspro.utils.AppConstants;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,7 +65,11 @@ public class AppSelectorDialogFragment extends DialogFragment {
                 RecyclerViewClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                ((AppSelectedListener) getActivity()).getSelectedAppPackage(applist.get(position).packageName);
+                if(applist.get(position) != null)
+                    ((AppSelectedListener) getActivity()).getSelectedAppPackage(applist.get(position).packageName);
+                else
+                    ((AppSelectedListener) getActivity()).getSelectedAppPackage(AppConstants
+                            .PLACEHOLDER_WIDGET);
 
                 dismiss();
             }
@@ -109,6 +114,8 @@ public class AppSelectorDialogFragment extends DialogFragment {
                     return name1.compareToIgnoreCase(name2);
                 }
             });
+
+            applist.add(0, null);
 
             adapter = new AppsAdapter(mContext, applist);
             return null;

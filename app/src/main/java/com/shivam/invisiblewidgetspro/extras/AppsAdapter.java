@@ -2,6 +2,7 @@ package com.shivam.invisiblewidgetspro.extras;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,12 +39,21 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int i) {
-        holder.icon.setImageDrawable(applicationInfos.get(i).loadIcon(mContext.getPackageManager()));
-        holder.name.setText(applicationInfos.get(i).loadLabel(mContext.getPackageManager()));
-        holder.pkgName.setText(applicationInfos.get(i).packageName);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        if (position == 0) {
+            holder.pkgName.setVisibility(View.GONE);
+            holder.icon.setImageDrawable(ResourcesCompat.getDrawable(mContext.getResources(), R
+                    .mipmap.default_app_icon, null));
+            holder.name.setText(mContext.getString(R.string.no_launcher_app));
+            holder.name.setTextColor(ResourcesCompat.getColor(mContext.getResources(), R.color
+                    .cyan_700, null));
+        } else {
+            holder.icon.setImageDrawable(applicationInfos.get(position).loadIcon(mContext.getPackageManager()));
+            holder.name.setText(applicationInfos.get(position).loadLabel(mContext.getPackageManager()));
+            holder.pkgName.setVisibility(View.VISIBLE);
+            holder.pkgName.setText(applicationInfos.get(position).packageName);
+        }
     }
-
     @Override
     public int getItemCount() {
         return applicationInfos.size();

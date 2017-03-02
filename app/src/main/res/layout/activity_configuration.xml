@@ -58,12 +58,20 @@
                         android:id="@+id/widget_id_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/activity_vertical_margin"
                         android:fontFamily="sans-serif-medium"
                         android:maxLines="1"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="@color/black"
                         tools:text="@string/widget_id_info_title"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="8dp"
+                        android:textColor="@color/grey_600"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:text="@string/select_launcher_app"/>
 
                     <FrameLayout
                         android:layout_width="match_parent"

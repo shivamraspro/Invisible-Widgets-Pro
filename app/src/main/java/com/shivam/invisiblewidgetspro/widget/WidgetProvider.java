@@ -13,8 +13,6 @@ import com.shivam.invisiblewidgetspro.ui.ConfigurationActivity;
 import com.shivam.invisiblewidgetspro.utils.AppConstants;
 import com.shivam.invisiblewidgetspro.utils.SharedPrefHelper;
 
-import static com.shivam.invisiblewidgetspro.utils.AppConstants.PACKAGE_NAME_NOT_FOUND;
-
 /**
  * Created by shivam on 10/02/17.
  */
@@ -74,18 +72,17 @@ public class WidgetProvider extends AppWidgetProvider {
             for (int appWidgetId : appWidgetIds) {
                 packageName = SharedPrefHelper.getPackageNameForWidgetId(context, appWidgetId);
 
-                if (packageName.equals(PACKAGE_NAME_NOT_FOUND)) {
-                    packageName = context.getPackageName();
-                    SharedPrefHelper.setPackageNameForWidgetId(context, appWidgetId, packageName);
-                    SharedPrefHelper.setConfigModeValue(context, true);
+
+                if(packageName.equals(AppConstants.PLACEHOLDER_WIDGET)) {
+                    views = new RemoteViews(context.getPackageName(), R.layout.widget_invisible);
+                } else {
+                    intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+                    intent.setAction(AppConstants.getDummyUniqueAction(appWidgetId));
+                    pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    views = new RemoteViews(context.getPackageName(), R.layout.widget_invisible);
+                    views.setOnClickPendingIntent(R.id.invisible_widget_layout, pendingIntent);
                 }
-
-                intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-                intent.setAction(AppConstants.getDummyUniqueAction(appWidgetId));
-                pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                views = new RemoteViews(context.getPackageName(), R.layout.widget_invisible);
-                views.setOnClickPendingIntent(R.id.invisible_widget_layout, pendingIntent);
 
                 appWidgetManager.updateAppWidget(appWidgetId, views);
             }
