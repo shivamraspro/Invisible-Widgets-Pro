@@ -163,6 +163,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        /*
+        This makes sure that the correct widgets information is displayed every time
+        todo check if it is overkill
+         */
         if(loadWidgetInfos) {
             new LoadWidgetInfos().execute();
             loadWidgetInfos = false;

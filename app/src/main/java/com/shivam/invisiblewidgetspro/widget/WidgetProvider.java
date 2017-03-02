@@ -6,13 +6,14 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import com.shivam.invisiblewidgetspro.R;
 import com.shivam.invisiblewidgetspro.ui.ConfigurationActivity;
 import com.shivam.invisiblewidgetspro.utils.AppConstants;
 import com.shivam.invisiblewidgetspro.utils.SharedPrefHelper;
+
+import static com.shivam.invisiblewidgetspro.utils.AppConstants.PACKAGE_NAME_NOT_FOUND;
 
 /**
  * Created by shivam on 10/02/17.
@@ -41,6 +42,15 @@ public class WidgetProvider extends AppWidgetProvider {
         particular widget instance but different for different widget instances.
         */
 
+        if (SharedPrefHelper.getPackageNameForWidgetId(context, appWidgetIds[0]).equals
+                (AppConstants.PACKAGE_NAME_NOT_FOUND)) {
+            showWidgets = true;
+            SharedPrefHelper.setConfigModeValue(context, true);
+            packageName = context.getPackageName();
+            SharedPrefHelper.setPackageNameForWidgetId(context, appWidgetIds[0], packageName);
+            appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, getClass()));
+        }
+
         if (showWidgets) {
             //show all widgets
             for (int appWidgetId : appWidgetIds) {
@@ -64,6 +74,12 @@ public class WidgetProvider extends AppWidgetProvider {
             for (int appWidgetId : appWidgetIds) {
                 packageName = SharedPrefHelper.getPackageNameForWidgetId(context, appWidgetId);
 
+                if (packageName.equals(PACKAGE_NAME_NOT_FOUND)) {
+                    packageName = context.getPackageName();
+                    SharedPrefHelper.setPackageNameForWidgetId(context, appWidgetId, packageName);
+                    SharedPrefHelper.setConfigModeValue(context, true);
+                }
+
                 intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
                 intent.setAction(AppConstants.getDummyUniqueAction(appWidgetId));
                 pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -81,9 +97,12 @@ public class WidgetProvider extends AppWidgetProvider {
        IMPORTANT : onReceive() is meant to receive the broadcasts and then dispatch the calls
        to other methods like onUpdate(), onDelete() etc. So If you are overriding onReceive() and
        not writing code to call onDelete(), onDisabled etc, they would never be called.
+
+       Hence it's very important to call super.onReceive() here, haha
     */
     @Override
     public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
         final String action = intent.getAction();
 
         if (action.equals(AppConstants.MANUAL_WIDGET_UPDATE) ||
@@ -96,51 +115,13 @@ public class WidgetProvider extends AppWidgetProvider {
                     SharedPrefHelper.getConfigModeValue(context));
 
             this.onUpdate(context, appWidgetManager, appWidgetIds);
-        } else if (action.equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-            Bundle extras = intent.getExtras();
-            if (extras != null) {
-                showWidgets = SharedPrefHelper.getConfigModeValue(context);
-                int[] appWidgetIds = extras.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-                if (appWidgetIds != null && appWidgetIds.length > 0) {
-                    this.onUpdate(context, AppWidgetManager.getInstance(context), appWidgetIds);
-                }
-            }
-        } else if (action.equals(AppWidgetManager.ACTION_APPWIDGET_DELETED)) {
-            Bundle extras = intent.getExtras();
-            if (extras != null && extras.containsKey(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
-                final int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
-                this.onDeleted(context, new int[] { appWidgetId });
-            }
-        } else if (AppWidgetManager.ACTION_APPWIDGET_DELETED.equals(action)) {
-            Bundle extras = intent.getExtras();
-            if (extras != null && extras.containsKey(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
-                final int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
-                this.onDeleted(context, new int[]{appWidgetId});
-            }
-        } else if (AppWidgetManager.ACTION_APPWIDGET_OPTIONS_CHANGED.equals(action)) {
-            Bundle extras = intent.getExtras();
-            if (extras != null && extras.containsKey(AppWidgetManager.EXTRA_APPWIDGET_ID)
-                    && extras.containsKey(AppWidgetManager.EXTRA_APPWIDGET_OPTIONS)) {
-                int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
-                Bundle widgetExtras = extras.getBundle(AppWidgetManager.EXTRA_APPWIDGET_OPTIONS);
-                this.onAppWidgetOptionsChanged(context, AppWidgetManager.getInstance(context),
-                        appWidgetId, widgetExtras);
-            }
-        } else if (AppWidgetManager.ACTION_APPWIDGET_ENABLED.equals(action)) {
-            this.onEnabled(context);
-        } else if (AppWidgetManager.ACTION_APPWIDGET_DISABLED.equals(action)) {
-            this.onDisabled(context);
-        } else if (AppWidgetManager.ACTION_APPWIDGET_RESTORED.equals(action)) {
-            Bundle extras = intent.getExtras();
-            if (extras != null) {
-                int[] oldIds = extras.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_OLD_IDS);
-                int[] newIds = extras.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-                if (oldIds != null && oldIds.length > 0) {
-                    this.onRestored(context, oldIds, newIds);
-                    this.onUpdate(context, AppWidgetManager.getInstance(context), newIds);
-                }
-            }
         }
     }
 
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        for (int appWidgetId : appWidgetIds) {
+            SharedPrefHelper.deletePackageNameForId(context, appWidgetId);
+        }
+    }
 }

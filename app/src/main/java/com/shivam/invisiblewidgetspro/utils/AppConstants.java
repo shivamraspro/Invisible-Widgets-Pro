@@ -16,6 +16,7 @@ public class AppConstants {
     public static final String CONFIG_MODE_FILE_KEY = "com.shivam.invisiblewidgetspro.CONFIG_MODE_FILE_KEY";
     public static final String WIDGETS_MAP_KEY = "com.shivam.invisiblewidgetspro.WIDGETS_FILE_KEY";
 
+    public static final String PACKAGE_NAME_NOT_FOUND = "package_name_not_found";
 
     public static final String MANUAL_WIDGET_UPDATE =
             "com.shivam.invisiblewidgetspro.MANUAL_APPWIDGET_UPDATE";

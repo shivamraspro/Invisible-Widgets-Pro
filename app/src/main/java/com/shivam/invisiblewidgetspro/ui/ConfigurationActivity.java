@@ -62,9 +62,20 @@ public class ConfigurationActivity extends AppCompatActivity
     private CharSequence appName;
     private String packageName;
 
+    /*
+    This activity will not launch by default when adding a new widget.
+    It will always be opened by tapping on a widget from the home screen in active configuration
+    mode.
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+
         setContentView(R.layout.activity_configuration);
 
         ButterKnife.bind(this);
@@ -91,41 +102,11 @@ public class ConfigurationActivity extends AppCompatActivity
             }
         });
 
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        widgetId = extras.getInt(AppConstants.WIDGET_ID_KEY);
+        packageName = extras.getString(AppConstants.PACKAGE_NAME_KEY);
 
-        if(widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            //This Activity is launched by tapping on a widget from the home screen
-            widgetId = extras.getInt(AppConstants.WIDGET_ID_KEY);
-            packageName = extras.getString(AppConstants.PACKAGE_NAME_KEY);
-
-            //Show Widget Information in Configuration Activity
-            showWidgetInformation();
-        }
-        else {
-            //This Activity is launched by default while adding a new widget
-            packageName = getPackageName();
-
-            SharedPrefHelper.setConfigModeValue(this, true);
-
-            configModeOn(true);
-
-            //Save Widget Information in SharedPreferences
-            SharedPrefHelper.setPackageNameForWidgetId(this, widgetId, packageName);
-
-            //Show Widget Information in Configuration Activity
-            showWidgetInformation();
-
-            //Update the corresponding widget on home screen
-            updateWidget();
-
-            Intent resultValue = new Intent();
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
-            setResult(RESULT_OK, resultValue);
-
-            finish();
-        }
+        //Show Widget Information in Configuration Activity
+        showWidgetInformation();
 
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -139,7 +120,8 @@ public class ConfigurationActivity extends AppCompatActivity
             appIcon = getPackageManager().getApplicationIcon(packageName);
             appName = getPackageManager().getApplicationInfo(packageName, 0).loadLabel
                     (getPackageManager());
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         appIconImageView.setImageDrawable(appIcon);
         appNameTextView.setText(appName);
@@ -151,30 +133,17 @@ public class ConfigurationActivity extends AppCompatActivity
         PendingIntent pendingIntent;
         RemoteViews views;
 
-        //Not checking the value of isConfigModeOn as it is updated correctly every time
-        //the switch is toggled, activity is created or entered (see OnCreate/OnStart)
+        //show widget
+        intent = new Intent(getApplicationContext(), ConfigurationActivity.class);
+        intent.putExtra(AppConstants.PACKAGE_NAME_KEY, packageName);
+        intent.putExtra(AppConstants.WIDGET_ID_KEY, widgetId);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setAction(AppConstants.getDummyUniqueAction(widgetId));
+        pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        if (isConfigModeOn) {
-            //show widget
-            intent = new Intent(getApplicationContext(), ConfigurationActivity.class);
-            intent.putExtra(AppConstants.PACKAGE_NAME_KEY, packageName);
-            intent.putExtra(AppConstants.WIDGET_ID_KEY, widgetId);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.setAction(AppConstants.getDummyUniqueAction(widgetId));
-            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            views = new RemoteViews(getPackageName(), R.layout.widget_visible);
-            views.setCharSequence(R.id.widget_id_visible, "setText", "#" + widgetId);
-            views.setOnClickPendingIntent(R.id.visible_widget_layout, pendingIntent);
-        } else {
-            //hide widget
-            intent = getPackageManager().getLaunchIntentForPackage(packageName);
-            intent.setAction(AppConstants.getDummyUniqueAction(widgetId));
-            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            views = new RemoteViews(getPackageName(), R.layout.widget_invisible);
-            views.setOnClickPendingIntent(R.id.invisible_widget_layout, pendingIntent);
-        }
+        views = new RemoteViews(getPackageName(), R.layout.widget_visible);
+        views.setCharSequence(R.id.widget_id_visible, "setText", "#" + widgetId);
+        views.setOnClickPendingIntent(R.id.visible_widget_layout, pendingIntent);
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         appWidgetManager.updateAppWidget(widgetId, views);
@@ -184,7 +153,7 @@ public class ConfigurationActivity extends AppCompatActivity
         configDesc.setText(getString(R.string.config_mode_desc_on));
         configTitle.setText(getString(R.string.config_title_on));
 
-        if(b) {
+        if (b) {
             SharedPrefHelper.setConfigModeValue(this, true);
             UpdateWidgetHelper.showWidgets(this);
         }
@@ -194,7 +163,7 @@ public class ConfigurationActivity extends AppCompatActivity
         configDesc.setText(getString(R.string.config_mode_desc_off));
         configTitle.setText(getString(R.string.config_title_off));
 
-        if(b) {
+        if (b) {
             SharedPrefHelper.setConfigModeValue(this, false);
             UpdateWidgetHelper.hideWidgets(this);
         }
@@ -207,16 +176,12 @@ public class ConfigurationActivity extends AppCompatActivity
         if (isConfigModeOn != b) {
             isConfigModeOn = b;
 
-            if (isConfigModeOn) {
-                configSwitch.setChecked(true);
-                configModeOn(true);
-            } else {
-                configSwitch.setChecked(false);
-                configModeOff(true);
-            }
+            configSwitch.setChecked(isConfigModeOn);
+            configModeOn(isConfigModeOn);
         }
     }
 
+    //listener from the AppSelectorDialogFragment
     @Override
     public void getSelectedAppPackage(String packageName) {
         this.packageName = packageName;
@@ -227,17 +192,6 @@ public class ConfigurationActivity extends AppCompatActivity
         showWidgetInformation();
 
         //Update the corresponding widget on home screen
-        updateWidget();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        Intent resultValue = new Intent();
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
-        setResult(RESULT_OK, resultValue);
-
         updateWidget();
     }
 

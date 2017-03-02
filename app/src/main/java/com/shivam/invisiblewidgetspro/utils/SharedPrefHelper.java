@@ -30,7 +30,8 @@ public class SharedPrefHelper {
                 Context.MODE_PRIVATE);
 
         //Default value for package name is this.app for all newly installed widgets
-        return sharedPrefs.getString(widgetId + "", context.getPackageName());
+        //This default value will be set by checking the returned value from this method
+        return sharedPrefs.getString(widgetId + "", AppConstants.PACKAGE_NAME_NOT_FOUND);
     }
 
     public static void setPackageNameForWidgetId(Context context, int widgetId, String
