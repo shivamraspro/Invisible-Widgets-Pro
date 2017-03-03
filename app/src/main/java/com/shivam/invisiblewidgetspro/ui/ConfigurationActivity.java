@@ -133,9 +133,13 @@ public class ConfigurationActivity extends AppCompatActivity
             } catch (Exception e) {
             }
 
+            appNameTextView.setTextColor(ResourcesCompat.getColor(getResources(), R.color
+                    .grey_900, null));
+
             appIconImageView.setImageDrawable(appIcon);
             appNameTextView.setText(appName);
             appPackageNameTextView.setText(packageName);
+
         }
     }
 

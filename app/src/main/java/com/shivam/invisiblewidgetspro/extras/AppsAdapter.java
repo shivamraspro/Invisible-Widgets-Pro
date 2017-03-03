@@ -50,6 +50,8 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.ViewHolder> {
         } else {
             holder.icon.setImageDrawable(applicationInfos.get(position).loadIcon(mContext.getPackageManager()));
             holder.name.setText(applicationInfos.get(position).loadLabel(mContext.getPackageManager()));
+            holder.name.setTextColor(ResourcesCompat.getColor(mContext.getResources(), R.color
+                    .grey_900, null));
             holder.pkgName.setVisibility(View.VISIBLE);
             holder.pkgName.setText(applicationInfos.get(position).packageName);
         }

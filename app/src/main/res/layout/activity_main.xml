@@ -23,8 +23,8 @@
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
-        android:layout_width="match_parent"
         android:id="@+id/scroll_view_main"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/grey_200"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -42,12 +42,13 @@
             <include layout="@layout/config_mode_switch_layout"/>
 
             <android.support.v7.widget.CardView
+                android:id="@+id/all_widgets_cardview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false"
-                android:clickable="false"
                 android:layout_marginBottom="64dp"
-                android:layout_marginTop="@dimen/activity_vertical_margin">
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:clickable="false"
+                android:focusable="false">
 
                 <LinearLayout
                     android:layout_width="match_parent"

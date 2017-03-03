@@ -50,6 +50,8 @@ public class AppsWidgetsAdapter extends RecyclerView.Adapter<AppsWidgetsAdapter.
                     .loadIcon(mContext.getPackageManager()));
             holder.name.setText(appWidgetData.get(position).getApplicationInfo()
                     .loadLabel(mContext.getPackageManager()));
+            holder.name.setTextColor(ResourcesCompat.getColor(mContext.getResources(), R.color
+                    .grey_900, null));
         }
         holder.id.setText("#" + appWidgetData.get(position).getWidgetId());
     }

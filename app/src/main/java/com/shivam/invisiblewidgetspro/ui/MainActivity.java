@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -59,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.scroll_view_main)
     ScrollView scrollView;
+
+    @BindView(R.id.all_widgets_cardview)
+    CardView allWidgetsCardview;
+
+    @BindView(R.id.carview_scrim)
+    View cardViewScrim;
 
     private int[] appWidgetIds;
     private Context mContext;
@@ -166,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
 
         /*
         This makes sure that the correct widgets information is displayed every time
-        todo check if it is overkill
          */
         if(loadWidgetInfos) {
             new LoadWidgetInfos().execute();
@@ -179,6 +185,9 @@ public class MainActivity extends AppCompatActivity {
         configTitle.setText(getString(R.string.config_title_on));
 
         SharedPrefHelper.setConfigModeValue(this, true);
+
+        cardViewScrim.setVisibility(View.VISIBLE);
+        cardViewScrim.setMinimumHeight(allWidgetsCardview.getHeight());
 
         UpdateWidgetHelper.showWidgets(this);
     }
