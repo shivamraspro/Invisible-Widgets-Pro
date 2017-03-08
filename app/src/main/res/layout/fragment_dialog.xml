@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.shivam.invisiblewidgetspro.extras.RecyclerViewEmptyViewSupport
+    <in.meegotech.invisiblewidgetspro.extras.RecyclerViewEmptyViewSupport
         android:id="@+id/recyclerview_installed_apps"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

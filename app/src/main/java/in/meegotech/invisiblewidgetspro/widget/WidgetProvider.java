@@ -1,4 +1,4 @@
-package com.shivam.invisiblewidgetspro.widget;
+package in.meegotech.invisiblewidgetspro.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -8,10 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.shivam.invisiblewidgetspro.R;
-import com.shivam.invisiblewidgetspro.ui.ConfigurationActivity;
-import com.shivam.invisiblewidgetspro.utils.AppConstants;
-import com.shivam.invisiblewidgetspro.utils.SharedPrefHelper;
+import in.meegotech.invisiblewidgetspro.ui.ConfigurationActivity;
+import in.meegotech.invisiblewidgetspro.utils.SharedPrefHelper;
+import in.meegotech.invisiblewidgetspro.R;
+import in.meegotech.invisiblewidgetspro.utils.AppConstants;
 
 /**
  * Created by shivam on 10/02/17.

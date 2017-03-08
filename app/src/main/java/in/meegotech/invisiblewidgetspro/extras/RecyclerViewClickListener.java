@@ -1,4 +1,4 @@
-package com.shivam.invisiblewidgetspro.extras;
+package in.meegotech.invisiblewidgetspro.extras;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

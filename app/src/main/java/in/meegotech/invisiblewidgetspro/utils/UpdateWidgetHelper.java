@@ -1,4 +1,4 @@
-package com.shivam.invisiblewidgetspro.utils;
+package in.meegotech.invisiblewidgetspro.utils;
 
 import android.content.Context;
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package com.shivam.invisiblewidgetspro;
+package in.meegotech.invisiblewidgetspro;
 
 import org.junit.Test;
 

@@ -27,7 +27,7 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin_inner"
         android:layout_marginRight="@dimen/activity_horizontal_margin_inner"
         android:layout_marginStart="@dimen/activity_horizontal_margin_inner"
-        tools:src="@mipmap/default_app_icon"/>
+        tools:src="@mipmap/app_launcher"/>
 
     <TextView
         android:id="@+id/app_widget_name"

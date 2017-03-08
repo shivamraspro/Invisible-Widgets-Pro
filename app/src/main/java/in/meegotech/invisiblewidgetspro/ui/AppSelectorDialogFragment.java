@@ -1,4 +1,4 @@
-package com.shivam.invisiblewidgetspro.ui;
+package in.meegotech.invisiblewidgetspro.ui;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -16,11 +16,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 
-import com.shivam.invisiblewidgetspro.R;
-import com.shivam.invisiblewidgetspro.extras.AppsAdapter;
-import com.shivam.invisiblewidgetspro.extras.RecyclerViewClickListener;
-import com.shivam.invisiblewidgetspro.extras.RecyclerViewEmptyViewSupport;
-import com.shivam.invisiblewidgetspro.utils.AppConstants;
+import in.meegotech.invisiblewidgetspro.extras.RecyclerViewEmptyViewSupport;
+import in.meegotech.invisiblewidgetspro.extras.AppsAdapter;
+import in.meegotech.invisiblewidgetspro.extras.RecyclerViewClickListener;
+import in.meegotech.invisiblewidgetspro.utils.AppConstants;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,10 +38,10 @@ import butterknife.ButterKnife;
 
 public class AppSelectorDialogFragment extends DialogFragment {
 
-    @BindView(R.id.recyclerview_installed_apps)
+    @BindView(in.meegotech.invisiblewidgetspro.R.id.recyclerview_installed_apps)
     RecyclerViewEmptyViewSupport recyclerView;
 
-    @BindView(R.id.empty_view)
+    @BindView(in.meegotech.invisiblewidgetspro.R.id.empty_view)
     LinearLayout emptyView;
 
     private AppsAdapter adapter;
@@ -52,7 +51,7 @@ public class AppSelectorDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dialog, container);
+        View view = inflater.inflate(in.meegotech.invisiblewidgetspro.R.layout.fragment_dialog, container);
 
         ButterKnife.bind(this, view);
 

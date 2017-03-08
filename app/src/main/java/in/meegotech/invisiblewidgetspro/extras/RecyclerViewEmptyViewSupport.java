@@ -1,41 +1,30 @@
-package com.shivam.invisiblewidgetspro.extras;
+package in.meegotech.invisiblewidgetspro.extras;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 
 /**
  * Created by shivam on 20/02/17.
  */
 
-public class NonScrollableRecyclerViewEmptyViewSupport extends RecyclerView {
+public class RecyclerViewEmptyViewSupport extends RecyclerView {
 
     @Nullable
     private View emptyView;
 
-    public NonScrollableRecyclerViewEmptyViewSupport(Context context) {
+    public RecyclerViewEmptyViewSupport(Context context) {
         super(context);
     }
 
-    public NonScrollableRecyclerViewEmptyViewSupport(Context context, AttributeSet attrs) {
+    public RecyclerViewEmptyViewSupport(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public NonScrollableRecyclerViewEmptyViewSupport(Context context, AttributeSet attrs, int defStyle) {
+    public RecyclerViewEmptyViewSupport(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-    }
-
-    //Code to make the RecyclerView non scrollable
-    @Override
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int heightMeasureSpec_custom = View.MeasureSpec.makeMeasureSpec(
-                Integer.MAX_VALUE >> 2, View.MeasureSpec.AT_MOST);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec_custom);
-        ViewGroup.LayoutParams params = getLayoutParams();
-        params.height = getMeasuredHeight();
     }
 
     private void checkIfEmpty() {

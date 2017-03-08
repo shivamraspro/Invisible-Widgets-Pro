@@ -1,4 +1,4 @@
-package com.shivam.invisiblewidgetspro.utils;
+package in.meegotech.invisiblewidgetspro.utils;
 
 /**
  * Created by shivam on 18/02/17.

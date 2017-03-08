@@ -1,4 +1,4 @@
-package com.shivam.invisiblewidgetspro.ui;
+package in.meegotech.invisiblewidgetspro.ui;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -17,14 +17,14 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.shivam.invisiblewidgetspro.R;
-import com.shivam.invisiblewidgetspro.utils.AppConstants;
-import com.shivam.invisiblewidgetspro.utils.SharedPrefHelper;
-import com.shivam.invisiblewidgetspro.utils.UpdateWidgetHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import in.meegotech.invisiblewidgetspro.R;
+import in.meegotech.invisiblewidgetspro.utils.AppConstants;
+import in.meegotech.invisiblewidgetspro.utils.SharedPrefHelper;
+import in.meegotech.invisiblewidgetspro.utils.UpdateWidgetHelper;
 
 public class ConfigurationActivity extends AppCompatActivity
         implements AppSelectorDialogFragment.AppSelectedListener {

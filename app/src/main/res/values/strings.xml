@@ -17,7 +17,6 @@
     <string name="congif_activity_name">Configure Widget</string>
     <string name="loading_application">Loading application info...</string>
     <string name="widget_id_info_title">Widget ID : #<xliff:g id="wId">%d</xliff:g></string>
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="loading_text">Loading Applications</string>
     <string name="widget_count_some">You have <xliff:g id="widgetCount">%d</xliff:g> active
         widgets.</string>
@@ -27,4 +26,9 @@
     <string name="widget_count_one">You have 1 active widget.</string>
     <string name="no_launcher_app">Placeholder Widget Only</string>
     <string name="select_launcher_app">Associated Application :</string>
+
+    <string name="banner_main_ad_unit_id">ca-app-pub-9602928847355590/6829189860</string>
+    <string name="banner_config_ad_unit_id">ca-app-pub-9602928847355590/4933654265</string>
+    
+    <string name="banner_app_id">ca-app-pub-9602928847355590~4015324263</string>
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.shivam.invisiblewidgetspro">
+          package="in.meegotech.invisiblewidgetspro">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -28,7 +28,7 @@
         </activity>
 
         <receiver
-            android:name=".widget.WidgetProvider"
+            android:name="in.meegotech.invisiblewidgetspro.widget.WidgetProvider"
             android:exported="true"
             android:enabled="true"
             android:label="@string/app_name">

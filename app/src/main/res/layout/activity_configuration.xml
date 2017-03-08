@@ -7,7 +7,7 @@
     android:id="@+id/activity_configure_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.shivam.invisiblewidgetspro.ui.MainActivity">
+    tools:context="in.meegotech.invisiblewidgetspro.ui.ConfigurationActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -91,7 +91,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
 
-
         </LinearLayout>
 
     </ScrollView>
@@ -102,7 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id">
+        ads:adUnitId="@string/banner_config_ad_unit_id">
     </com.google.android.gms.ads.AdView>
 
 </android.support.design.widget.CoordinatorLayout>

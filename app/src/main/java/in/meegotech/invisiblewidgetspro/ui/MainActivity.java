@@ -1,4 +1,4 @@
-package com.shivam.invisiblewidgetspro.ui;
+package in.meegotech.invisiblewidgetspro.ui;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -16,21 +16,20 @@ import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.facebook.stetho.Stetho;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.shivam.invisiblewidgetspro.R;
-import com.shivam.invisiblewidgetspro.extras.AppsWidgetsAdapter;
-import com.shivam.invisiblewidgetspro.extras.NonScrollableRecyclerViewEmptyViewSupport;
-import com.shivam.invisiblewidgetspro.utils.AppConstants;
-import com.shivam.invisiblewidgetspro.utils.SharedPrefHelper;
-import com.shivam.invisiblewidgetspro.utils.UpdateWidgetHelper;
-import com.shivam.invisiblewidgetspro.widget.WidgetProvider;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import in.meegotech.invisiblewidgetspro.R;
+import in.meegotech.invisiblewidgetspro.extras.AppsWidgetsAdapter;
+import in.meegotech.invisiblewidgetspro.extras.NonScrollableRecyclerViewEmptyViewSupport;
+import in.meegotech.invisiblewidgetspro.utils.AppConstants;
+import in.meegotech.invisiblewidgetspro.utils.SharedPrefHelper;
+import in.meegotech.invisiblewidgetspro.utils.UpdateWidgetHelper;
+import in.meegotech.invisiblewidgetspro.widget.WidgetProvider;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -101,19 +100,12 @@ public class MainActivity extends AppCompatActivity {
 
         new LoadWidgetInfos().execute();
 
+//        MobileAds.initialize(getApplicationContext(), getString(R.string.banner_app_id));
+
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
         loadWidgetInfos = false;
-
-        setUpStetho();
-    }
-
-    private void setUpStetho() {
-        Stetho.initialize(Stetho.newInitializerBuilder(this)
-                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
-                .build()
-        );
     }
 
     private void updateWidgetsInfo() {

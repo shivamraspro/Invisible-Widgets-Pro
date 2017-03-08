@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "749365629935",
-    "firebase_url": "https://invisiblewidgetspro.firebaseio.com",
-    "project_id": "invisiblewidgetspro",
-    "storage_bucket": "invisiblewidgetspro.appspot.com"
+    "project_number": "978336235364",
+    "firebase_url": "https://invisiblewidgetspro-927ab.firebaseio.com",
+    "project_id": "invisiblewidgetspro-927ab",
+    "storage_bucket": "invisiblewidgetspro-927ab.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:749365629935:android:7bb142f20ce37569",
+        "mobilesdk_app_id": "1:978336235364:android:6db38ba518d4003f",
         "android_client_info": {
-          "package_name": "com.shivam.invisiblewidgetspro"
+          "package_name": "in.meegotech.invisiblewidgetspro"
         }
       },
       "oauth_client": [
         {
-          "client_id": "749365629935-q144e2p79ecg0elvn5ehd50j38a7vho5.apps.googleusercontent.com",
+          "client_id": "978336235364-p337v1nrbfjirogqojsiu8lqho1a05ct.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.shivam.invisiblewidgetspro",
-            "certificate_hash": "0738CF40DF09DA36625C7421F9CEB69FEE9F28C6"
+            "package_name": "in.meegotech.invisiblewidgetspro",
+            "certificate_hash": "0738cf40df09da36625c7421f9ceb69fee9f28c6"
           }
         },
         {
-          "client_id": "749365629935-phb1mnflrbph4re8vgta54virofr8f0r.apps.googleusercontent.com",
+          "client_id": "978336235364-2vd9vu98ut1to9143ocm6bha28ansl4e.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA02MAi-T_or5eRiKTV29KtNkM7NlEUAo8"
+          "current_key": "AIzaSyAZBCpKu8Iz2lCfqJlZgg2b-MnAypudELM"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "749365629935-phb1mnflrbph4re8vgta54virofr8f0r.apps.googleusercontent.com",
+              "client_id": "978336235364-2vd9vu98ut1to9143ocm6bha28ansl4e.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
