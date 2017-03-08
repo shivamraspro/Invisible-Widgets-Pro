@@ -7,10 +7,10 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingBottom="4dp"
-    android:paddingEnd="@dimen/activity_horizontal_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin_inner"
+    android:paddingLeft="@dimen/activity_horizontal_margin_inner"
+    android:paddingRight="@dimen/activity_horizontal_margin_inner"
+    android:paddingStart="@dimen/activity_horizontal_margin_inner"
     android:paddingTop="4dp">
 
     <ImageView
@@ -18,8 +18,8 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin_inner"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_inner"
         tools:src="@mipmap/default_app_icon"/>
 
     <LinearLayout
@@ -44,7 +44,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
-            android:visibility="gone"
             android:maxLines="1"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/grey_500"

@@ -41,7 +41,7 @@ public class AppsWidgetsAdapter extends RecyclerView.Adapter<AppsWidgetsAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (appWidgetData.get(position).getApplicationInfo() == null) {
             holder.icon.setImageDrawable(ResourcesCompat.getDrawable(mContext.getResources(), R
-                    .mipmap.default_app_icon, null));
+                    .mipmap.app_launcher, null));
             holder.name.setText(mContext.getString(R.string.no_launcher_app));
             holder.name.setTextColor(ResourcesCompat.getColor(mContext.getResources(), R.color
                     .cyan_700, null));

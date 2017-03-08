@@ -22,6 +22,15 @@
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id">
+    </com.google.android.gms.ads.AdView>
+
     <ScrollView
         android:id="@+id/scroll_view_main"
         android:layout_width="match_parent"
@@ -33,10 +42,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin_outer"
+            android:paddingLeft="@dimen/activity_horizontal_margin_outer"
+            android:paddingRight="@dimen/activity_horizontal_margin_outer"
+            android:paddingStart="@dimen/activity_horizontal_margin_outer"
             android:paddingTop="@dimen/activity_vertical_margin">
 
             <include layout="@layout/config_mode_switch_layout"/>
@@ -54,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/activity_vertical_margin">
+                    android:padding="@dimen/activity_horizontal_margin_inner">
 
                     <TextView
                         android:id="@+id/active_widget_info"
@@ -114,14 +123,5 @@
 
         </LinearLayout>
     </ScrollView>
-
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adViewMain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id">
-    </com.google.android.gms.ads.AdView>
 
 </android.support.design.widget.CoordinatorLayout>

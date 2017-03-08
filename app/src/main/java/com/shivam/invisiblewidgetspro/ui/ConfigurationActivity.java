@@ -119,11 +119,12 @@ public class ConfigurationActivity extends AppCompatActivity
 
         if (packageName.equals(AppConstants.PLACEHOLDER_WIDGET)) {
             appPackageNameTextView.setVisibility(View.GONE);
-            appIconImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R
-                    .mipmap.default_app_icon, null));
-            appNameTextView.setText(getString(R.string.no_launcher_app));
             appNameTextView.setTextColor(ResourcesCompat.getColor(getResources(), R.color
                     .cyan_700, null));
+
+            appIconImageView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R
+                    .mipmap.app_launcher, null));
+            appNameTextView.setText(getString(R.string.no_launcher_app));
 
         } else {
             try {
@@ -133,6 +134,7 @@ public class ConfigurationActivity extends AppCompatActivity
             } catch (Exception e) {
             }
 
+            appPackageNameTextView.setVisibility(View.VISIBLE);
             appNameTextView.setTextColor(ResourcesCompat.getColor(getResources(), R.color
                     .grey_900, null));
 

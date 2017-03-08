@@ -40,7 +40,8 @@ public class WidgetProvider extends AppWidgetProvider {
         particular widget instance but different for different widget instances.
         */
 
-        if (SharedPrefHelper.getPackageNameForWidgetId(context, appWidgetIds[0]).equals
+        if (appWidgetIds.length > 0 &&
+                SharedPrefHelper.getPackageNameForWidgetId(context, appWidgetIds[0]).equals
                 (AppConstants.PACKAGE_NAME_NOT_FOUND)) {
             showWidgets = true;
             SharedPrefHelper.setConfigModeValue(context, true);
@@ -57,7 +58,8 @@ public class WidgetProvider extends AppWidgetProvider {
                 intent = new Intent(context, ConfigurationActivity.class);
                 intent.putExtra(AppConstants.PACKAGE_NAME_KEY, packageName);
                 intent.putExtra(AppConstants.WIDGET_ID_KEY, appWidgetId);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                //todo change flags
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.setAction(AppConstants.getDummyUniqueAction(appWidgetId));
                 pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
