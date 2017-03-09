@@ -4,7 +4,7 @@ android {
     signingConfigs {
         config {
             keyAlias 'iwpkey'
-            keyPassword 'iwp304'
+            keyPassword 'iwpkey304'
             storeFile file('../meego-iwp-keystore.jks')
             storePassword 'meegoiwp304'
         }
