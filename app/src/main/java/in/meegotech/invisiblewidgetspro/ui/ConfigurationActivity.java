@@ -166,6 +166,19 @@ public class ConfigurationActivity extends AppCompatActivity
         appWidgetManager.updateAppWidget(widgetId, views);
     }
 
+    @OnClick(R.id.config_title)
+    public void changeConfigSwitch() {
+        if(configSwitch.isChecked()) {
+            isConfigModeOn = false;
+            configSwitch.setChecked(false);
+            configModeOff(true);
+        } else {
+            isConfigModeOn = true;
+            configSwitch.setChecked(true);
+            configModeOn(true);
+        }
+    }
+
     private void configModeOn(boolean b) {
         configDesc.setText(getString(R.string.config_mode_desc_on));
         configTitle.setText(getString(R.string.config_title_on));
@@ -193,8 +206,14 @@ public class ConfigurationActivity extends AppCompatActivity
         if (isConfigModeOn != b) {
             isConfigModeOn = b;
 
-            configSwitch.setChecked(isConfigModeOn);
-            configModeOn(isConfigModeOn);
+            if(isConfigModeOn) {
+                configSwitch.setChecked(true);
+                configModeOn(false);
+            }
+            else {
+                configSwitch.setChecked(false);
+                configModeOff(false);
+            }
         }
     }
 

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import in.meegotech.invisiblewidgetspro.R;
 import in.meegotech.invisiblewidgetspro.extras.AppsWidgetsAdapter;
 import in.meegotech.invisiblewidgetspro.extras.NonScrollableRecyclerViewEmptyViewSupport;
@@ -76,20 +77,21 @@ public class MainActivity extends AppCompatActivity {
 
         if(isConfigModeOn) {
             configSwitch.setChecked(true);
-            configModeOn();
+            configModeOn(false);
         }
         else {
             configSwitch.setChecked(false);
-            configModeOff();
+            configModeOff(false);
         }
 
         configSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                isConfigModeOn = isChecked;
                 if(isChecked) {
-                   configModeOn();
+                   configModeOn(true);
                 } else {
-                   configModeOff();
+                   configModeOff(true);
                 }
             }
         });
@@ -99,8 +101,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setNestedScrollingEnabled(false);
 
         new LoadWidgetInfos().execute();
-
-//        MobileAds.initialize(getApplicationContext(), getString(R.string.banner_app_id));
 
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -148,11 +148,11 @@ public class MainActivity extends AppCompatActivity {
 
             if(isConfigModeOn) {
                 configSwitch.setChecked(true);
-                configModeOn();
+                configModeOn(false);
             }
             else {
                 configSwitch.setChecked(false);
-                configModeOff();
+                configModeOff(false);
             }
         }
 
@@ -165,22 +165,40 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void configModeOn() {
+
+    @OnClick(R.id.config_title)
+    public void changeConfigSwitch( ) {
+        if(configSwitch.isChecked()) {
+            isConfigModeOn = false;
+            configSwitch.setChecked(false);
+            configModeOff(true);
+        } else {
+            isConfigModeOn = true;
+            configSwitch.setChecked(true);
+            configModeOn(true);
+        }
+    }
+
+    private void configModeOn(boolean b) {
         configDesc.setText(getString(R.string.config_mode_desc_on));
         configTitle.setText(getString(R.string.config_title_on));
 
-        SharedPrefHelper.setConfigModeValue(this, true);
+        if(b) {
+            SharedPrefHelper.setConfigModeValue(this, true);
 
-        UpdateWidgetHelper.showWidgets(this);
+            UpdateWidgetHelper.showWidgets(this);
+        }
     }
 
-    private void configModeOff() {
+    private void configModeOff(boolean b) {
         configDesc.setText(getString(R.string.config_mode_desc_off));
         configTitle.setText(getString(R.string.config_title_off));
 
-        SharedPrefHelper.setConfigModeValue(this, false);
+        if(b) {
+            SharedPrefHelper.setConfigModeValue(this, false);
 
-        UpdateWidgetHelper.hideWidgets(this);
+            UpdateWidgetHelper.hideWidgets(this);
+        }
     }
 
     private class LoadWidgetInfos extends AsyncTask<Void, Void, Void> {
@@ -241,4 +259,5 @@ public class MainActivity extends AppCompatActivity {
             return applicationInfo;
         }
     }
+
 }
