@@ -12,7 +12,7 @@
         android:supportsRtl="true">
         <activity
             android:name=".ui.MainActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:theme="@style/MainActivtityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -23,7 +23,7 @@
 
         <activity
             android:name=".ui.ConfigurationActivity"
-            android:noHistory="true"
+            android:launchMode="singleTop"
             android:theme="@style/ConfigActivityTheme">
         </activity>
 

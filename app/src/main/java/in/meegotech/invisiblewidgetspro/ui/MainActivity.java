@@ -3,12 +3,14 @@ package in.meegotech.invisiblewidgetspro.ui;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -27,6 +29,8 @@ import butterknife.OnClick;
 import in.meegotech.invisiblewidgetspro.R;
 import in.meegotech.invisiblewidgetspro.extras.AppsWidgetsAdapter;
 import in.meegotech.invisiblewidgetspro.extras.NonScrollableRecyclerViewEmptyViewSupport;
+import in.meegotech.invisiblewidgetspro.extras.RecyclerViewClickListener;
+import in.meegotech.invisiblewidgetspro.extras.RecyclerViewItemDecorator;
 import in.meegotech.invisiblewidgetspro.utils.AppConstants;
 import in.meegotech.invisiblewidgetspro.utils.SharedPrefHelper;
 import in.meegotech.invisiblewidgetspro.utils.UpdateWidgetHelper;
@@ -99,6 +103,19 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setEmptyView(emptyView);
         recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.addItemDecoration(new RecyclerViewItemDecorator(mContext));
+        recyclerView.addOnItemTouchListener(new RecyclerViewClickListener(mContext, new RecyclerViewClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                if(position != RecyclerView.NO_POSITION) {
+                    Intent intent = new Intent(mContext, ConfigurationActivity.class);
+                    intent.putExtra(AppConstants.WIDGET_ID_KEY, appWidgetIds[position]);
+                    intent.putExtra(AppConstants.PACKAGE_NAME_KEY, SharedPrefHelper.getPackageNameForWidgetId(
+                            mContext, appWidgetIds[position]));
+                    startActivity(intent);
+                }
+            }
+        }));
 
         new LoadWidgetInfos().execute();
 

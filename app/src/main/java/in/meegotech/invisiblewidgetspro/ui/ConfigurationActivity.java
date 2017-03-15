@@ -72,10 +72,7 @@ public class ConfigurationActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+//        widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
 
         setContentView(R.layout.activity_configuration);
 
@@ -103,6 +100,8 @@ public class ConfigurationActivity extends AppCompatActivity
             }
         });
 
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
         widgetId = extras.getInt(AppConstants.WIDGET_ID_KEY);
         packageName = extras.getString(AppConstants.PACKAGE_NAME_KEY);
 
@@ -111,6 +110,18 @@ public class ConfigurationActivity extends AppCompatActivity
 
         AdRequest adRequest = new AdRequest.Builder().build();
 //        mAdView.loadAd(adRequest);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        Bundle extras = intent.getExtras();
+        widgetId = extras.getInt(AppConstants.WIDGET_ID_KEY);
+        packageName = extras.getString(AppConstants.PACKAGE_NAME_KEY);
+
+        //Show Widget Information in Configuration Activity
+        showWidgetInformation();
     }
 
     private void showWidgetInformation() {

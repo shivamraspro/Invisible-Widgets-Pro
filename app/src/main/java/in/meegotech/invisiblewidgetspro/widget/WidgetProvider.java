@@ -8,10 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import in.meegotech.invisiblewidgetspro.ui.ConfigurationActivity;
-import in.meegotech.invisiblewidgetspro.utils.SharedPrefHelper;
 import in.meegotech.invisiblewidgetspro.R;
+import in.meegotech.invisiblewidgetspro.ui.ConfigurationActivity;
 import in.meegotech.invisiblewidgetspro.utils.AppConstants;
+import in.meegotech.invisiblewidgetspro.utils.SharedPrefHelper;
 
 /**
  * Created by shivam on 10/02/17.
@@ -40,6 +40,7 @@ public class WidgetProvider extends AppWidgetProvider {
         particular widget instance but different for different widget instances.
         */
 
+        //For the time a new widget is added
         if (appWidgetIds.length > 0 &&
                 SharedPrefHelper.getPackageNameForWidgetId(context, appWidgetIds[0]).equals
                 (AppConstants.PACKAGE_NAME_NOT_FOUND)) {
@@ -47,6 +48,7 @@ public class WidgetProvider extends AppWidgetProvider {
             SharedPrefHelper.setConfigModeValue(context, true);
             packageName = context.getPackageName();
             SharedPrefHelper.setPackageNameForWidgetId(context, appWidgetIds[0], packageName);
+            //We make all the widgets visible on adding a new widget
             appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, getClass()));
         }
 
@@ -58,8 +60,6 @@ public class WidgetProvider extends AppWidgetProvider {
                 intent = new Intent(context, ConfigurationActivity.class);
                 intent.putExtra(AppConstants.PACKAGE_NAME_KEY, packageName);
                 intent.putExtra(AppConstants.WIDGET_ID_KEY, appWidgetId);
-                //todo change flags
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.setAction(AppConstants.getDummyUniqueAction(appWidgetId));
                 pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -89,7 +89,6 @@ public class WidgetProvider extends AppWidgetProvider {
                 appWidgetManager.updateAppWidget(appWidgetId, views);
             }
         }
-        showWidgets = false;
     }
 
     /*
@@ -101,7 +100,6 @@ public class WidgetProvider extends AppWidgetProvider {
     */
     @Override
     public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
         final String action = intent.getAction();
 
         if (action.equals(AppConstants.MANUAL_WIDGET_UPDATE) ||
@@ -114,7 +112,10 @@ public class WidgetProvider extends AppWidgetProvider {
                     SharedPrefHelper.getConfigModeValue(context));
 
             this.onUpdate(context, appWidgetManager, appWidgetIds);
-        }
+        } else
+            showWidgets = SharedPrefHelper.getConfigModeValue(context);
+
+        super.onReceive(context, intent);
     }
 
     @Override
