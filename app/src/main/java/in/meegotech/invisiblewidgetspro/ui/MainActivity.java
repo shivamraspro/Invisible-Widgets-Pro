@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         new LoadWidgetInfos().execute();
 
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+//        mAdView.loadAd(adRequest);
 
         loadWidgetInfos = false;
     }
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @OnClick(R.id.config_title)
+    @OnClick(R.id.config_card)
     public void changeConfigSwitch( ) {
         if(configSwitch.isChecked()) {
             isConfigModeOn = false;

@@ -110,7 +110,7 @@ public class ConfigurationActivity extends AppCompatActivity
         showWidgetInformation();
 
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+//        mAdView.loadAd(adRequest);
     }
 
     private void showWidgetInformation() {
@@ -166,7 +166,7 @@ public class ConfigurationActivity extends AppCompatActivity
         appWidgetManager.updateAppWidget(widgetId, views);
     }
 
-    @OnClick(R.id.config_title)
+    @OnClick(R.id.config_card)
     public void changeConfigSwitch() {
         if(configSwitch.isChecked()) {
             isConfigModeOn = false;
