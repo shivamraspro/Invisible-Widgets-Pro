@@ -5,6 +5,7 @@
     android:id="@+id/app_widget_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/touch_ripple_cyan"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingBottom="8dp"

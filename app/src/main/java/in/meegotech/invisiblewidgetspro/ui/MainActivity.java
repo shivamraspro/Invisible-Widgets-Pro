@@ -8,11 +8,13 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
@@ -64,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.scroll_view_main)
     ScrollView scrollView;
 
+    @BindView(R.id.config_card_container)
+    FrameLayout configCardContainer;
+
     private int[] appWidgetIds;
     private Context mContext;
     private AppsWidgetsAdapter adapter;
@@ -79,11 +84,10 @@ public class MainActivity extends AppCompatActivity {
         mContext = this;
         isConfigModeOn = SharedPrefHelper.getConfigModeValue(this);
 
-        if(isConfigModeOn) {
+        if (isConfigModeOn) {
             configSwitch.setChecked(true);
             configModeOn(false);
-        }
-        else {
+        } else {
             configSwitch.setChecked(false);
             configModeOff(false);
         }
@@ -92,10 +96,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 isConfigModeOn = isChecked;
-                if(isChecked) {
-                   configModeOn(true);
+                if (isChecked) {
+                    configModeOn(true);
                 } else {
-                   configModeOff(true);
+                    configModeOff(true);
                 }
             }
         });
@@ -107,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addOnItemTouchListener(new RecyclerViewClickListener(mContext, new RecyclerViewClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                if(position != RecyclerView.NO_POSITION) {
+                if (position != RecyclerView.NO_POSITION) {
                     Intent intent = new Intent(mContext, ConfigurationActivity.class);
                     intent.putExtra(AppConstants.WIDGET_ID_KEY, appWidgetIds[position]);
                     intent.putExtra(AppConstants.PACKAGE_NAME_KEY, SharedPrefHelper.getPackageNameForWidgetId(
@@ -119,6 +123,10 @@ public class MainActivity extends AppCompatActivity {
 
         new LoadWidgetInfos().execute();
 
+        configCardContainer.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable
+                .touch_ripple_cyan, null));
+
+
         AdRequest adRequest = new AdRequest.Builder().build();
 //        mAdView.loadAd(adRequest);
 
@@ -128,15 +136,13 @@ public class MainActivity extends AppCompatActivity {
     private void updateWidgetsInfo() {
         recyclerView.setAdapter(adapter);
 
-        if(appWidgetIds.length == 0) {
+        if (appWidgetIds.length == 0) {
             activeWidgetInfo.setText(getString(R.string.widget_count_none));
             recyclerView.setVisibility(View.GONE);
-        }
-        else if(appWidgetIds.length == 1) {
+        } else if (appWidgetIds.length == 1) {
             recyclerView.setVisibility(View.VISIBLE);
             activeWidgetInfo.setText(getString(R.string.widget_count_one));
-        }
-        else {
+        } else {
             recyclerView.setVisibility(View.VISIBLE);
             activeWidgetInfo.setText(getString(R.string.widget_count_some, appWidgetIds.length));
         }
@@ -160,14 +166,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         boolean b = SharedPrefHelper.getConfigModeValue(this);
-        if(isConfigModeOn != b) {
+        if (isConfigModeOn != b) {
             isConfigModeOn = b;
 
-            if(isConfigModeOn) {
+            if (isConfigModeOn) {
                 configSwitch.setChecked(true);
                 configModeOn(false);
-            }
-            else {
+            } else {
                 configSwitch.setChecked(false);
                 configModeOff(false);
             }
@@ -176,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         /*
         This makes sure that the correct widgets information is displayed every time
          */
-        if(loadWidgetInfos) {
+        if (loadWidgetInfos) {
             new LoadWidgetInfos().execute();
             loadWidgetInfos = false;
         }
@@ -184,8 +189,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     @OnClick(R.id.config_card)
-    public void changeConfigSwitch( ) {
-        if(configSwitch.isChecked()) {
+    public void changeConfigSwitch() {
+        if (configSwitch.isChecked()) {
             isConfigModeOn = false;
             configSwitch.setChecked(false);
             configModeOff(true);
@@ -200,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
         configDesc.setText(getString(R.string.config_mode_desc_on));
         configTitle.setText(getString(R.string.config_title_on));
 
-        if(b) {
+        if (b) {
             SharedPrefHelper.setConfigModeValue(this, true);
 
             UpdateWidgetHelper.showWidgets(this);
@@ -211,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         configDesc.setText(getString(R.string.config_mode_desc_off));
         configTitle.setText(getString(R.string.config_title_off));
 
-        if(b) {
+        if (b) {
             SharedPrefHelper.setConfigModeValue(this, false);
 
             UpdateWidgetHelper.hideWidgets(this);
@@ -223,18 +228,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(mContext);
-            appWidgetIds =  appWidgetManager.getAppWidgetIds(new ComponentName(mContext,
+            appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(mContext,
                     WidgetProvider.class));
 
             ArrayList<Dataset> appWidgetData = new ArrayList<>();
 
             String packageName;
 
-            for(int i=0; i < appWidgetIds.length; i++) {
+            for (int i = 0; i < appWidgetIds.length; i++) {
                 try {
                     packageName = SharedPrefHelper.getPackageNameForWidgetId(mContext,
                             appWidgetIds[i]);
-                    if(packageName.equals(AppConstants.PLACEHOLDER_WIDGET)) {
+                    if (packageName.equals(AppConstants.PLACEHOLDER_WIDGET)) {
                         appWidgetData.add(new Dataset(null, appWidgetIds[i]));
                     } else {
                         appWidgetData.add(new Dataset(

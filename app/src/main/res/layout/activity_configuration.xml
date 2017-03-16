@@ -23,9 +23,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/grey_200"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_height="match_parent">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,14 +37,15 @@
             android:paddingStart="@dimen/activity_horizontal_margin_outer"
             android:paddingTop="@dimen/activity_vertical_margin">
 
-            <include layout="@layout/config_mode_switch_layout"/>
+            <include
+                layout="@layout/config_mode_switch_layout"/>
 
             <android.support.v7.widget.CardView
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginBottom="64dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:padding="@dimen/activity_vertical_margin">
 
                 <LinearLayout
@@ -67,11 +68,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="8dp"
-                        android:textColor="@color/grey_600"
-                        android:textAppearance="?android:textAppearanceMedium"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
-                        android:text="@string/select_launcher_app"/>
+                        android:paddingTop="8dp"
+                        android:text="@string/select_launcher_app"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textColor="@color/grey_600"/>
 
                     <FrameLayout
                         android:layout_width="match_parent"

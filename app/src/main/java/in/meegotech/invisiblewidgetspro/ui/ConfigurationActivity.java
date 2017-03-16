@@ -9,6 +9,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
@@ -57,6 +58,9 @@ public class ConfigurationActivity extends AppCompatActivity
 
     @BindView(R.id.adViewConfig)
     AdView mAdView;
+
+    @BindView(R.id.config_card_container)
+    FrameLayout configCardContainer;
 
     private int widgetId;
     private Drawable appIcon;
@@ -107,6 +111,9 @@ public class ConfigurationActivity extends AppCompatActivity
 
         //Show Widget Information in Configuration Activity
         showWidgetInformation();
+
+        configCardContainer.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable
+                .touch_ripple_red, null));
 
         AdRequest adRequest = new AdRequest.Builder().build();
 //        mAdView.loadAd(adRequest);
