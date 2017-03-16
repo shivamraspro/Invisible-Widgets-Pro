@@ -1,5 +1,7 @@
 package in.meegotech.invisiblewidgetspro.ui;
 
+
+import android.app.NotificationManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -23,6 +25,10 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -34,9 +40,12 @@ import in.meegotech.invisiblewidgetspro.extras.NonScrollableRecyclerViewEmptyVie
 import in.meegotech.invisiblewidgetspro.extras.RecyclerViewClickListener;
 import in.meegotech.invisiblewidgetspro.extras.RecyclerViewItemDecorator;
 import in.meegotech.invisiblewidgetspro.utils.AppConstants;
+import in.meegotech.invisiblewidgetspro.utils.NotificationHelper;
 import in.meegotech.invisiblewidgetspro.utils.SharedPrefHelper;
 import in.meegotech.invisiblewidgetspro.utils.UpdateWidgetHelper;
 import in.meegotech.invisiblewidgetspro.widget.WidgetProvider;
+
+;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     private Context mContext;
     private AppsWidgetsAdapter adapter;
     private boolean loadWidgetInfos;
+    private NotificationManager mNotificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
         configCardContainer.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable
                 .touch_ripple_cyan, null));
 
-
         AdRequest adRequest = new AdRequest.Builder().build();
 //        mAdView.loadAd(adRequest);
 
@@ -157,12 +166,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        loadWidgetInfos = true;
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         boolean b = SharedPrefHelper.getConfigModeValue(this);
@@ -185,8 +188,16 @@ public class MainActivity extends AppCompatActivity {
             new LoadWidgetInfos().execute();
             loadWidgetInfos = false;
         }
+
+        EventBus.getDefault().register(this);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        loadWidgetInfos = true;
+        EventBus.getDefault().unregister(this);
+    }
 
     @OnClick(R.id.config_card)
     public void changeConfigSwitch() {
@@ -205,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
         configDesc.setText(getString(R.string.config_mode_desc_on));
         configTitle.setText(getString(R.string.config_title_on));
 
+        NotificationHelper.showNotification(mContext);
+
         if (b) {
             SharedPrefHelper.setConfigModeValue(this, true);
 
@@ -216,11 +229,19 @@ public class MainActivity extends AppCompatActivity {
         configDesc.setText(getString(R.string.config_mode_desc_off));
         configTitle.setText(getString(R.string.config_title_off));
 
+        NotificationHelper.hideNotification(mContext);
+
         if (b) {
             SharedPrefHelper.setConfigModeValue(this, false);
 
             UpdateWidgetHelper.hideWidgets(this);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void turnOffConfigMode(NotificationHelper.TurnOffConfigModeEvent event) {
+        configSwitch.setChecked(false);
+        configModeOff(false);
     }
 
     private class LoadWidgetInfos extends AsyncTask<Void, Void, Void> {

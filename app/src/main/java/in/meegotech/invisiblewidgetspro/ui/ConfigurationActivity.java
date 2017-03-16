@@ -19,11 +19,16 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.meegotech.invisiblewidgetspro.R;
 import in.meegotech.invisiblewidgetspro.utils.AppConstants;
+import in.meegotech.invisiblewidgetspro.utils.NotificationHelper;
 import in.meegotech.invisiblewidgetspro.utils.SharedPrefHelper;
 import in.meegotech.invisiblewidgetspro.utils.UpdateWidgetHelper;
 
@@ -201,6 +206,8 @@ public class ConfigurationActivity extends AppCompatActivity
         configDesc.setText(getString(R.string.config_mode_desc_on));
         configTitle.setText(getString(R.string.config_title_on));
 
+        NotificationHelper.showNotification(this);
+
         if (b) {
             SharedPrefHelper.setConfigModeValue(this, true);
             UpdateWidgetHelper.showWidgets(this);
@@ -211,10 +218,18 @@ public class ConfigurationActivity extends AppCompatActivity
         configDesc.setText(getString(R.string.config_mode_desc_off));
         configTitle.setText(getString(R.string.config_title_off));
 
+        NotificationHelper.hideNotification(this);
+
         if (b) {
             SharedPrefHelper.setConfigModeValue(this, false);
             UpdateWidgetHelper.hideWidgets(this);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void turnOffConfigMode(NotificationHelper.TurnOffConfigModeEvent event) {
+        configSwitch.setChecked(false);
+        configModeOff(false);
     }
 
     @Override
@@ -233,6 +248,14 @@ public class ConfigurationActivity extends AppCompatActivity
                 configModeOff(false);
             }
         }
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     //listener from the AppSelectorDialogFragment

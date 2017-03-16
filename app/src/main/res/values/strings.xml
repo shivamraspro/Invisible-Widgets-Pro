@@ -31,4 +31,7 @@
     <string name="banner_config_ad_unit_id">ca-app-pub-9602928847355590/4933654265</string>
     
     <string name="banner_app_id">ca-app-pub-9602928847355590~4015324263</string>
+
+    <string name="notification_title">Turn off Configuration Mode</string>
+    <string name="notification_text">to make the widgets invisible</string>
 </resources>
