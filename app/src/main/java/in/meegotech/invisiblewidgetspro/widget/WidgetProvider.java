@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 import in.meegotech.invisiblewidgetspro.R;
 import in.meegotech.invisiblewidgetspro.ui.ConfigurationActivity;
 import in.meegotech.invisiblewidgetspro.utils.AppConstants;
+import in.meegotech.invisiblewidgetspro.utils.NotificationHelper;
 import in.meegotech.invisiblewidgetspro.utils.SharedPrefHelper;
 
 /**
@@ -50,6 +51,8 @@ public class WidgetProvider extends AppWidgetProvider {
             SharedPrefHelper.setPackageNameForWidgetId(context, appWidgetIds[0], packageName);
             //We make all the widgets visible on adding a new widget
             appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, getClass()));
+
+            NotificationHelper.showNotification(context);
         }
 
         if (showWidgets) {
