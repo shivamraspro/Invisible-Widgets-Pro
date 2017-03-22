@@ -35,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.meegotech.invisiblewidgetspro.R;
+import in.meegotech.invisiblewidgetspro.cache.AppsService;
 import in.meegotech.invisiblewidgetspro.extras.AppsWidgetsAdapter;
 import in.meegotech.invisiblewidgetspro.extras.NonScrollableRecyclerViewEmptyViewSupport;
 import in.meegotech.invisiblewidgetspro.extras.RecyclerViewClickListener;
@@ -139,7 +140,16 @@ public class MainActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
 //        mAdView.loadAd(adRequest);
 
+        startAppCacheService();
+
         loadWidgetInfos = false;
+    }
+
+    private void startAppCacheService() {
+        if(SharedPrefHelper.getFirstLaunchFlag(mContext)) {
+            startService(new Intent(this, AppsService.class));
+            SharedPrefHelper.setFirstLaunchFlag(mContext, false);
+        }
     }
 
     private void updateWidgetsInfo() {

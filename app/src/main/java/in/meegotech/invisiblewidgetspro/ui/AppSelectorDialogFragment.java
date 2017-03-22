@@ -2,11 +2,12 @@ package in.meegotech.invisiblewidgetspro.ui;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.ProgressDialog;
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,27 +17,25 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 
-import in.meegotech.invisiblewidgetspro.extras.RecyclerViewEmptyViewSupport;
-import in.meegotech.invisiblewidgetspro.extras.AppsAdapter;
-import in.meegotech.invisiblewidgetspro.extras.RecyclerViewClickListener;
-import in.meegotech.invisiblewidgetspro.utils.AppConstants;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import in.meegotech.invisiblewidgetspro.cache.AppsContract;
+import in.meegotech.invisiblewidgetspro.extras.AppsAdapter;
+import in.meegotech.invisiblewidgetspro.extras.RecyclerViewClickListener;
+import in.meegotech.invisiblewidgetspro.extras.RecyclerViewEmptyViewSupport;
+import in.meegotech.invisiblewidgetspro.utils.AppConstants;
 
 /**
  * Created by shivam on 11/02/17.
- *
+ * <p>
  * Some of the code is taken from
  * http://stacktips.com/tutorials/android/how-to-get-list-of-installed-apps-in-android
  */
 
-public class AppSelectorDialogFragment extends DialogFragment {
+public class AppSelectorDialogFragment extends DialogFragment
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @BindView(in.meegotech.invisiblewidgetspro.R.id.recyclerview_installed_apps)
     RecyclerViewEmptyViewSupport recyclerView;
@@ -44,9 +43,13 @@ public class AppSelectorDialogFragment extends DialogFragment {
     @BindView(in.meegotech.invisiblewidgetspro.R.id.empty_view)
     LinearLayout emptyView;
 
+    private static final int CURSOR_LOADER_ID = 0;
+
     private AppsAdapter adapter;
     private Context mContext;
     private ArrayList<ApplicationInfo> applist;
+    private Cursor mCursor;
+    private AppsAdapter mAdapter;
 
     @Nullable
     @Override
@@ -57,29 +60,36 @@ public class AppSelectorDialogFragment extends DialogFragment {
 
         mContext = getActivity();
 
+        mAdapter = new AppsAdapter(mContext, null);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setEmptyView(emptyView);
 
         recyclerView.addOnItemTouchListener(new RecyclerViewClickListener(getActivity(), new
                 RecyclerViewClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                if(applist.get(position) != null)
-                    ((AppSelectedListener) getActivity()).getSelectedAppPackage(applist.get(position).packageName);
-                else
-                    ((AppSelectedListener) getActivity()).getSelectedAppPackage(AppConstants
-                            .PLACEHOLDER_WIDGET);
+                    @Override
+                    public void onItemClick(View v, int position) {
+                        if (position == 0)
+                            ((AppSelectedListener) getActivity()).getSelectedAppPackage(AppConstants.PLACEHOLDER_WIDGET);
+                        else {
+                            mCursor.moveToPosition(position);
+                            ((AppSelectedListener) getActivity()).getSelectedAppPackage
+                                    (AppsContract.getColumnString(mCursor, AppsContract
+                                            .AppColumns.PACKAGE_NAME));
+                        }
+                            dismiss();
+                    }
+                }));
+        recyclerView.setAdapter(mAdapter);
 
-                dismiss();
-            }
-        }));
-
-        new LoadApplications().execute();
+        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
 
         return view;
     }
 
-    /** The system calls this only when creating the layout in a dialog. */
+    /**
+     * The system calls this only when creating the layout in a dialog.
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // The only reason you might override this method when using onCreateView() is
@@ -91,58 +101,27 @@ public class AppSelectorDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    private class LoadApplications extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progress = null;
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(
+                mContext,
+                AppsContract.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mAdapter.swapCursor(data);
+        mCursor = data;
+    }
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            applist = checkForLaunchIntent(mContext.getPackageManager().getInstalledApplications
-                    (PackageManager.GET_META_DATA));
-
-            Collections.sort(applist, new Comparator<ApplicationInfo>() {
-                @Override
-                public int compare(ApplicationInfo applicationInfo, ApplicationInfo t1) {
-                    String name1 = applicationInfo.loadLabel(mContext.getPackageManager()).toString();
-                    String name2 = t1.loadLabel(mContext.getPackageManager()).toString();
-
-                    return name1.compareToIgnoreCase(name2);
-                }
-            });
-
-            applist.add(0, null);
-
-            adapter = new AppsAdapter(mContext, applist);
-            return null;
-        }
-
-
-
-        @Override
-        protected void onPostExecute(Void result) {
-            recyclerView.setAdapter(adapter);
-            super.onPostExecute(result);
-        }
-
-
-        private ArrayList<ApplicationInfo> checkForLaunchIntent(List<ApplicationInfo> list) {
-            ArrayList<ApplicationInfo> applist = new ArrayList<>();
-            for (ApplicationInfo info : list) {
-                try {
-                    //to load only those apps that can be launched
-                    if (null != mContext.getPackageManager().getLaunchIntentForPackage(info.packageName)) {
-                        applist.add(info);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return applist;
-        }
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mAdapter.swapCursor(null);
     }
 
     public interface AppSelectedListener {

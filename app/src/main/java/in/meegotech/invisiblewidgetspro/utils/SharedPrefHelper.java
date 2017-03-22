@@ -50,4 +50,20 @@ public class SharedPrefHelper {
         editor.remove(widgetId + "");
         editor.apply();
     }
+
+    public static boolean getFirstLaunchFlag(Context context) {
+        SharedPreferences sharedPrefs = context.getSharedPreferences(AppConstants.CONFIG_MODE_FILE_KEY,
+                Context.MODE_PRIVATE);
+
+        //Default value of First Launch Flag is TRUE for first install of the app
+        return sharedPrefs.getBoolean(AppConstants.FIRST_LAUNCH_KEY, true);
+    }
+
+    public static void setFirstLaunchFlag(Context context, boolean b) {
+        SharedPreferences sharedPrefs = context.getSharedPreferences(AppConstants.CONFIG_MODE_FILE_KEY,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putBoolean(AppConstants.FIRST_LAUNCH_KEY, b);
+        editor.apply();
+    }
 }

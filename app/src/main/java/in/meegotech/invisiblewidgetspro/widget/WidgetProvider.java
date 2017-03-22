@@ -47,7 +47,8 @@ public class WidgetProvider extends AppWidgetProvider {
                 (AppConstants.PACKAGE_NAME_NOT_FOUND)) {
             showWidgets = true;
             SharedPrefHelper.setConfigModeValue(context, true);
-            packageName = context.getPackageName();
+            //By default each new widget will be a placeholder/blank widget.
+            packageName = AppConstants.PLACEHOLDER_WIDGET;
             SharedPrefHelper.setPackageNameForWidgetId(context, appWidgetIds[0], packageName);
             //We make all the widgets visible on adding a new widget
             appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, getClass()));

@@ -6,6 +6,7 @@ package in.meegotech.invisiblewidgetspro.utils;
 
 public class AppConstants {
     public static final String CONFIG_MODE_KEY = "config_mode";
+    public static final String FIRST_LAUNCH_KEY = "first_launch";
 
     public static final String PACKAGE_NAME_KEY = "package_name";
     public static final String WIDGET_ID_KEY = "widget_id";

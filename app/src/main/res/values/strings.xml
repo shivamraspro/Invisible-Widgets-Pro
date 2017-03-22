@@ -13,7 +13,7 @@
     </string>
     <string name="config_title_off">Configuration Mode : OFF</string>
     <string name="config_title_on">Configuration Mode : ON</string>
-    <!--<string name="widgets_id_to_package_file_key">"com.shivam.invisiblewidgetspro.WIDGETS_FILE_KEY"</string>-->
+
     <string name="congif_activity_name">Configure Widget</string>
     <string name="loading_application">Loading application info...</string>
     <string name="widget_id_info_title">Widget ID : #<xliff:g id="wId">%d</xliff:g></string>
@@ -24,13 +24,13 @@
     <string name="widget_count_subtext">Add/Delete widgets from the home screen.</string>
     <string name="loading_appwidgets">Loading App Widgets</string>
     <string name="widget_count_one">You have 1 active widget.</string>
-    <string name="no_launcher_app">Placeholder Widget Only</string>
+    <string name="no_launcher_app">Blank Widget</string>
     <string name="select_launcher_app">Associated Application :</string>
 
-    <string name="banner_main_ad_unit_id">ca-app-pub-9602928847355590/6829189860</string>
-    <string name="banner_config_ad_unit_id">ca-app-pub-9602928847355590/4933654265</string>
+    <string name="banner_main_ad_unit_id" translatable="false">ca-app-pub-9602928847355590/6829189860</string>
+    <string name="banner_config_ad_unit_id" translatable="false">ca-app-pub-9602928847355590/4933654265</string>
     
-    <string name="banner_app_id">ca-app-pub-9602928847355590~4015324263</string>
+    <string name="banner_app_id" translatable="false">ca-app-pub-9602928847355590~4015324263</string>
 
     <string name="notification_title">Turn off Configuration Mode</string>
     <string name="notification_text">to make the widgets invisible</string>

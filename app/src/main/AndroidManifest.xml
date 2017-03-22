@@ -47,6 +47,23 @@
             android:name=".utils.NotificationHelper"
             android:exported="false"/>
 
+        <receiver android:name=".cache.AppListenerBroadcastReceiver">
+            <intent-filter android:priority="100">
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".cache.AppsService"/>
+
+        <provider
+            android:name=".cache.AppsProvider"
+            android:authorities="in.meegotech.invisiblewidgetspro"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
