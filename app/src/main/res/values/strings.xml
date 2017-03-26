@@ -34,4 +34,9 @@
 
     <string name="notification_title">Turn off Configuration Mode</string>
     <string name="notification_text">to make the widgets invisible</string>
+
+    <string name="first_time_dialog_title">Watch Tutorial Video</string>
+    <string name="first_time_dialog_message">You can watch it later from the options menu.</string>
+    <string name="first_time_dialog_positiveBtn">OK</string>
+    <string name="first_time_dialog_negativeBtn">SKIP</string>
 </resources>

@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/cyan_700</item>
         <item name="colorPrimaryDark">@color/cyan_700</item>
         <item name="colorAccent">@color/cyan_700</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 
     <style name="ConfigActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">

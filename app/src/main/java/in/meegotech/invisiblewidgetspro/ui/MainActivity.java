@@ -1,19 +1,25 @@
 package in.meegotech.invisiblewidgetspro.ui;
 
 
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -79,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.config_card_container)
     FrameLayout configCardContainer;
 
+    @BindView(R.id.toolbar_main)
+    Toolbar toolbarMain;
+
     private int[] appWidgetIds;
     private Context mContext;
     private AppsWidgetsAdapter adapter;
@@ -137,19 +146,56 @@ public class MainActivity extends AppCompatActivity {
         configCardContainer.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable
                 .touch_ripple_cyan, null));
 
+        setSupportActionBar(toolbarMain);
+
         AdRequest adRequest = new AdRequest.Builder().build();
 //        mAdView.loadAd(adRequest);
 
-        startAppCacheService();
+        firstLaunchSetup();
 
         loadWidgetInfos = false;
     }
 
-    private void startAppCacheService() {
+    private void firstLaunchSetup() {
         if(SharedPrefHelper.getFirstLaunchFlag(mContext)) {
+
+            //start App cache Service
             startService(new Intent(this, AppsService.class));
+
+            //Show an alert dialog for the tutorial video
+            new AlertDialog.Builder(mContext)
+                    .setTitle(R.string.first_time_dialog_title)
+                    .setMessage(R.string.first_time_dialog_message)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.first_time_dialog_positiveBtn, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/yav4McQYI2c")));
+                        }
+                    })
+                    .setNegativeButton(R.string.first_time_dialog_negativeBtn, null)
+                    .show();
+
+            //return first launch flag to false
             SharedPrefHelper.setFirstLaunchFlag(mContext, false);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_watch_tutorial) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/yav4McQYI2c")));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void updateWidgetsInfo() {
