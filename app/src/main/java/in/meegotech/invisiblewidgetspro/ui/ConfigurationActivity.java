@@ -121,7 +121,7 @@ public class ConfigurationActivity extends AppCompatActivity
                 .touch_ripple_red, null));
 
         AdRequest adRequest = new AdRequest.Builder().build();
-//        mAdView.loadAd(adRequest);
+        mAdView.loadAd(adRequest);
     }
 
     @Override

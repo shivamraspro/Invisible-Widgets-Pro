@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbarMain);
 
         AdRequest adRequest = new AdRequest.Builder().build();
-//        mAdView.loadAd(adRequest);
+        mAdView.loadAd(adRequest);
 
         firstLaunchSetup();
 
