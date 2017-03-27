@@ -136,6 +136,11 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra(AppConstants.WIDGET_ID_KEY, appWidgetIds[position]);
                     intent.putExtra(AppConstants.PACKAGE_NAME_KEY, SharedPrefHelper.getPackageNameForWidgetId(
                             mContext, appWidgetIds[position]));
+
+                    //According to the design of the app, config activity is always opened in
+                    // active config mode
+                    SharedPrefHelper.setConfigModeValue(mContext, true);
+
                     startActivity(intent);
                 }
             }

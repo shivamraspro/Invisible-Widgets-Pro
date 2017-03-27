@@ -1,12 +1,18 @@
 package in.meegotech.invisiblewidgetspro.ui;
 
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -27,6 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.meegotech.invisiblewidgetspro.R;
+import in.meegotech.invisiblewidgetspro.cache.AppsService;
 import in.meegotech.invisiblewidgetspro.utils.AppConstants;
 import in.meegotech.invisiblewidgetspro.utils.NotificationHelper;
 import in.meegotech.invisiblewidgetspro.utils.SharedPrefHelper;
@@ -67,6 +74,9 @@ public class ConfigurationActivity extends AppCompatActivity
     @BindView(R.id.config_card_container)
     FrameLayout configCardContainer;
 
+    @BindView(R.id.toolbar_config)
+    Toolbar toolbarConfig;
+
     private int widgetId;
     private Drawable appIcon;
     private CharSequence appName;
@@ -81,7 +91,6 @@ public class ConfigurationActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
 
         setContentView(R.layout.activity_configuration);
 
@@ -120,10 +129,57 @@ public class ConfigurationActivity extends AppCompatActivity
         configCardContainer.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable
                 .touch_ripple_red, null));
 
+        setSupportActionBar(toolbarConfig);
+
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        firstLaunchSetup();
     }
 
+    private void firstLaunchSetup() {
+        if(SharedPrefHelper.getFirstLaunchFlag(this)) {
+
+            //start App cache Service
+            startService(new Intent(this, AppsService.class));
+
+            //Show an alert dialog for the tutorial video
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.first_time_dialog_title)
+                    .setMessage(R.string.first_time_dialog_message)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.first_time_dialog_positiveBtn, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/yav4McQYI2c")));
+                        }
+                    })
+                    .setNegativeButton(R.string.first_time_dialog_negativeBtn, null)
+                    .show();
+
+            //return first launch flag to false
+            SharedPrefHelper.setFirstLaunchFlag(this, false);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_watch_tutorial) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/yav4McQYI2c")));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    //todo
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
